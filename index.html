@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>
-      Visualization - Project Alan and Eric
-    </title>
+    <title>Visualization - Project Alan and Eric</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- <link
       href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap"
@@ -30,11 +28,14 @@
       </header>
     </div>
     <div id="visualization">
-      <div id="map-filter">
+      <div id="map-filter" class="d-flex">
         <div id="map"></div>
-        <div id="filter"></div>
+        <div id="filter-container">
+          <div id="filter"></div>
+          <div id="filler-space"></div>
+        </div>
       </div>
-      <div id="distributions">
+      <div id="distributions" class="d-flex">
         <div id="year-distribution"></div>
         <div id="hour-distribution"></div>
       </div>

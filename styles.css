@@ -1,8 +1,37 @@
-#map{
-    width: 50%;
+#map {
+  width: 50%;
+  height: 600px;
+  margin: 50px;
 }
 
-#filter{
-    width: 50%;
-    color:aqua;
+#filter {
+  background-color: aqua;
+  margin: 50px;
+  height: 70%;
+}
+
+#filter-container{
+    width:50%;
+    display: flex;
+    flex-direction: column;
+}
+
+#filler-space{
+    background-color: blue;
+    height: 30%;
+    margin: 50px;
+}
+
+#year-distribution {
+  width: 50%;
+  background-color: yellow;
+  height: 500px;
+  margin: 50px;
+}
+
+#hour-distribution {
+  width: 50%;
+  background-color: green;
+  height: 500px;
+  margin: 50px;
 }

@@ -17,21 +17,22 @@ class googleMap {
     // let mapContainer = document.getElementById("map");
     //The second parameter we want to use is the zoom and center(lat and lng) options for the map
     let options = {
-      zoom: 4,
+      zoom: 7,
       center: {
-        lat: 41.4925,
-        lng: -95.8905556,
+        lat: 39.321,
+        lng: -111.0937,
       },
       mapTypeId: "roadmap",
+      restriction: {
+        latLngBounds: { north: 43, east: -108, south: 36, west: -114 },
+        strictBounds: false,
+      },
       //Style made in the google API style wizard to give the map a UFO feel
       //You can customize your map styles and and them into a styles array in the options opbject
       // styles: googleMapStyles.styles,
     }; //TODO show just utah??
-  
+
     // Create the Google Map…
     let map = new google.maps.Map(d3.select("#map").node(), options);
-  
   }
-  
 }
-
