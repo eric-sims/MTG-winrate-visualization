@@ -1,6 +1,11 @@
 class filter {
-  constructor() {
-    console.log("in constructor");
+  constructor(globalApplicationState) {
+    this.globalApplicationState = globalApplicationState;
+
+    this.globalApplicationState.filteredData = this.globalApplicationState.data
+      .filter((d) => d.CRASH_DATETIME.includes("2019"))
+      .slice(0, 1000);
+
     const booleanData = [
       { type: "BICYCLIST_INVOLVED", name: "Bicyclist Involved" },
       {
@@ -26,7 +31,33 @@ class filter {
       { type: "WORK_ZONE_RELATED", name: "Work Zone Related" },
     ];
 
-    const groups = d3
+    const years = [2016, 2017, 2018, 2019];
+
+    const radioGroups = d3
+      .select("#year-radio")
+      .selectAll("g")
+      .data(years)
+      .join("g");
+    radioGroups
+      .append("input")
+      .attr("type", "radio")
+      .attr("value", (d) => d)
+      .attr("name", "year")
+      .on("change", (d) => updateRadio(d))
+      .filter((d, i) => +d === 2019)
+      .attr("checked", "true");
+    radioGroups.append("text").text((d) => d);
+
+    const updateRadio = (radioEvent) => {
+      console.log(radioEvent.srcElement.value);
+      this.globalApplicationState.filteredData =
+        this.globalApplicationState.data
+          .filter((d) => d.CRASH_DATETIME.includes(radioEvent.srcElement.value))
+          .slice(0, 1000);
+      this.globalApplicationState.map.draw();
+    };
+
+    const checkGroups = d3
       .select("#checkboxes")
       .selectAll("g")
       .data(booleanData)
@@ -35,16 +66,17 @@ class filter {
       .classed("left", (d, i) => (i % 2) - 1)
       .classed("right", (d, i) => i % 2);
 
-    groups
+    checkGroups
       .append("input")
       .attr("type", "checkbox")
-      .on("change", (d) => update(d));
+      .attr("value", (d) => d.type)
+      .on("change", (d) => updateCheck(d));
 
-    function update(d) {
-      console.log("data", d);
+    function updateCheck(d) {
+      console.log("data", d.srcElement.value);
     }
 
-    groups.append("text").text((d) => d.name);
-    groups.filter((d, i) => i % 2).append("br");
+    checkGroups.append("text").text((d) => d.name);
+    checkGroups.filter((d, i) => i % 2).append("br");
   }
 }

@@ -45,13 +45,17 @@
   right:100px;
 }
 
-.ufo {
+.accident {
   position: absolute;
 }
 
-.ufo svg {
+.accident svg {
   width: 60px;
   height: 20px;
   font: 10px sans-serif;
   position: absolute;
+}
+
+.marker :hover{
+  cursor: pointer;
 }

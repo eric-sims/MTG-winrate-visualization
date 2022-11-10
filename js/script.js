@@ -6,10 +6,14 @@ Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
 
     this.filter = new filter(globalApplicationState);
 
-    globalApplicationState.monthlyDistribution = new monthlyDistribution(globalApplicationState);
+    globalApplicationState.monthlyDistribution = new monthlyDistribution(
+      globalApplicationState
+    );
     globalApplicationState.monthlyDistribution.draw();
 
-    globalApplicationState.hourlyDistribution = new hourlyDistribution(globalApplicationState);
+    globalApplicationState.hourlyDistribution = new hourlyDistribution(
+      globalApplicationState
+    );
     globalApplicationState.hourlyDistribution.draw();
   }
 );
