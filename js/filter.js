@@ -32,10 +32,19 @@ class filter {
       .data(booleanData)
       .join("g")
       .classed("text-check-group", true)
-      .classed("left", (d, i) => (i % 2) + 1)
+      .classed("left", (d, i) => (i % 2) - 1)
       .classed("right", (d, i) => i % 2);
 
-    groups.append("input").attr("type", "checkbox");
+    groups
+      .append("input")
+      .attr("type", "checkbox")
+      .on("change", (d) => update(d));
+
+    function update(d) {
+      console.log("data", d);
+    }
+
     groups.append("text").text((d) => d.name);
+    groups.filter((d, i) => i % 2).append("br");
   }
 }

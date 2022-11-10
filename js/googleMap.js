@@ -35,7 +35,8 @@ class googleMap {
       };
 
       overlay.draw = function () {
-        let projection = this.getProjection();
+        let projection = this.getProjection(),
+          padding = 10;
 
         let marker = layer.selectAll("svg").data(data);
         let markerEnter = marker.enter().append("svg");
@@ -47,25 +48,28 @@ class googleMap {
 
         marker = marker.merge(markerEnter);
 
-        marker.each(transform).attr("class", "marker");
+        marker
+          .each(transform)
+          .each((d) => console.log("here", d))
+          .attr("class", "marker");
 
         marker
           .select("circle")
           .attr("r", 5)
-          .attr("cx", 0)
-          .attr("cy", 0)
+          .attr("cx", padding)
+          .attr("cy", padding)
           .attr("fill", "red")
           .on("click", function (d) {
             console.log(d);
           });
 
         function transform(d) {
-          d = new google.maps.LatLng(+d.LAT_UTM_Y, +d.LONG_UTM_X);
+          d = new google.maps.LatLng(+d.lat, +d.lon);
           d = projection.fromLatLngToDivPixel(d);
           return d3
             .select(this)
-            .style("left", d.x + "px")
-            .style("top", d.y + "px");
+            .style("left", d.x - padding + "px")
+            .style("top", d.y - padding + "px");
         }
       };
     };

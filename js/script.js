@@ -1,10 +1,12 @@
-Promise.all([d3.csv("../data/Utah_Crash_Data_2020.csv")]).then((data) => {
-  globalApplicationState.data = data[0];
-  globalApplicationState.map = new googleMap(globalApplicationState);
-  globalApplicationState.map.draw();
+Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
+  (data) => {
+    globalApplicationState.data = data[0];
+    globalApplicationState.map = new googleMap(globalApplicationState);
+    globalApplicationState.map.draw();
 
-  this.filter = new filter(globalApplicationState);
-});
+    this.filter = new filter(globalApplicationState);
+  }
+);
 
 const globalApplicationState = {
   map: null,

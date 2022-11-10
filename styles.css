@@ -47,5 +47,10 @@
 } */
 
 .text-check-group{
-  width:50%
+  display: inline-block;
+  width: 50%;
+}
+
+.right{
+  right:100px;
 }
