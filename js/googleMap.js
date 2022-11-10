@@ -22,7 +22,8 @@ class googleMap {
 
     // we downloaded ufo data from here: https://www.kaggle.com/NUFORC/ufo-sightings 
     //Thanks Kaggle!
-    this.globalApplicationState.filteredData = this.globalApplicationState.data.filter(d => d.CRASH_DATETIME.includes("2019")).slice(0, 1000);
+    this.globalApplicationState.filteredData = this.globalApplicationState.data.filter(d => d.CRASH_DATETIME.includes("2019")).slice(0, 1000);   // TODO: filtered data needs to be done in filter.js
+    
     // Load the ufo sighting data. When the data comes back, create an overlay.
     let data = this.globalApplicationState.filteredData;
 

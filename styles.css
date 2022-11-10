@@ -22,16 +22,16 @@
     margin: 50px;
 }
 
-#year-distribution {
+#monthlyDistribution {
   width: 50%;
-  background-color: yellow;
+  background-color: lightgray;
   height: 500px;
   margin: 50px;
 }
 
-#hour-distribution {
+#hourlyDistribution {
   width: 50%;
-  background-color: green;
+  background-color: lightgray;
   height: 500px;
   margin: 50px;
 }
