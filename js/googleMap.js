@@ -3,8 +3,9 @@ class googleMap {
     this.globalApplicationState = globalApplicationState;
   }
 
-  async draw() {
+  draw() {
     console.log(this.globalApplicationState.data);
+
     let options = {
       zoom: 7,
       center: {
@@ -23,11 +24,11 @@ class googleMap {
 
     let overlay = new google.maps.OverlayView();
 
-    let data = this.globalApplicationState.data.slice(0, 100);
+    let data = this.globalApplicationState.data.slice(0, 10);
+
     overlay.onAdd = function () {
       let layer = d3
-        .select(this.getPanes().overlayMouseTarget)
-        .append("div")
+        .select(this.getPanes().overlayMouseTarget).append("div")
         .attr("class", "crashPoints");
 
       overlay.onRemove = function () {
@@ -50,18 +51,14 @@ class googleMap {
 
         marker
           .each(transform)
-          .each((d) => console.log("here", d))
           .attr("class", "marker");
 
-        marker
-          .select("circle")
+        marker.select("circle")
           .attr("r", 5)
           .attr("cx", padding)
           .attr("cy", padding)
           .attr("fill", "red")
-          .on("click", function (d) {
-            console.log(d);
-          });
+          .on("click", d => console.log(d));
 
         function transform(d) {
           d = new google.maps.LatLng(+d.lat, +d.lon);
@@ -73,6 +70,108 @@ class googleMap {
         }
       };
     };
+
     overlay.setMap(map);
   }
+
+  async drawGoogleMap() {
+
+    //added our custom styles to a separate json file
+    // let googleMapStyles = await d3.json("google-map-style.json");
+
+    //You can see what the styles are in the inspector
+    // console.log(googleMapStyles);
+
+    //Our options to pass to our new google map object
+    let options = {
+        zoom: 4,
+        center: {
+            lat: 41.4925,
+            lng: -95.8905556,
+        },
+        mapTypeId: 'roadmap',
+        //Style made in the google API style wizard to give the map a UFO feel
+        //You can customize your map styles and and them into a styles array in the options opbject
+        // styles: googleMapStyles.styles
+    };
+
+    // Create the Google Map…
+    let map = new google.maps.Map(d3.select("#map").node(), options);
+
+    // we downloaded ufo data from here: https://www.kaggle.com/NUFORC/ufo-sightings 
+    //Thanks Kaggle!
+
+    // Load the ufo sighting data. When the data comes back, create an overlay.
+    let data = await d3.csv("data/Utah_Crash_Data_2020_cleaned.csv");
+
+    //Filter the data to only see US sightings. Take a sample of 200.
+    let usDataSample = data.filter(d => d.CRASH_DATETIME.includes('2019')).slice(0, 1000);
+
+    //Create the overlay that we will draw on
+    let overlay = new google.maps.OverlayView();
+
+    // Add the container when the overlay is added to the map.
+    overlay.onAdd = function () {
+
+        //to see all the available panes;
+        console.log(this.getPanes());
+
+        let layer = d3.select(this.getPanes().overlayMouseTarget).append("div")
+            .attr("class", "ufo");
+
+        overlay.onRemove = function () {
+            d3.select('.ufo').remove();
+        };
+
+        overlay.draw = function () {
+            console.log('here')
+            let projection = this.getProjection(),
+                padding = 10;
+
+            let circleScale = d3.scaleLinear()
+                .domain([d3.min(usDataSample, d => d.CRASH_SEVERITY_ID),
+                    d3.max(usDataSample, d => d.CRASH_SEVERITY_ID)])
+                .range([2, 7]).clamp(true);
+
+            // Draw each marker as a separate SVG element.
+            // We could use a single SVG, but what size would it have?
+            let marker = layer.selectAll('svg')
+                .data(usDataSample);
+
+            let markerEnter = marker.enter().append("svg");
+
+            // add the circle
+            markerEnter.append("circle");
+
+            marker.exit().remove();
+
+            marker = marker.merge(markerEnter);
+
+            marker
+                .each(transform)
+                .attr("class", "marker");
+
+            // style the circle
+            marker.select("circle")
+                .attr("r", d => circleScale(d.CRASH_SEVERITY_ID))
+                .attr("cx", padding)
+                .attr("cy", padding)
+                .style('opacity', .8)
+                .attr('fill', 'red')
+                .on('click', d => console.log(d));
+
+            //transforms the markers to the right
+            // lat / lng using the projection from google maps
+            function transform(d) {
+                d = new google.maps.LatLng(+d.lat, +d.lon);
+                d = projection.fromLatLngToDivPixel(d);
+                return d3.select(this)
+                    .style("left", (d.x - padding) + "px")
+                    .style("top", (d.y - padding) + "px");
+            }
+        };
+    };
+    // Bind our overlay to the map…
+    overlay.setMap(map);
+}
 }

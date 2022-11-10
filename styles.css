@@ -36,16 +36,6 @@
   margin: 50px;
 }
 
-/* .crashPoints {
-  position: absolute;
-}
-
-.crashPoints svg {
-  width: 50%;
-  height: 600px;
-  margin: 50px;
-} */
-
 .text-check-group{
   display: inline-block;
   width: 50%;
@@ -53,4 +43,15 @@
 
 .right{
   right:100px;
+}
+
+.ufo {
+  position: absolute;
+}
+
+.ufo svg {
+  width: 60px;
+  height: 20px;
+  font: 10px sans-serif;
+  position: absolute;
 }
