@@ -1,10 +1,10 @@
 Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
   (data) => {
     globalApplicationState.data = data[0];
-    // globalApplicationState.map = new googleMap(globalApplicationState);
-    // globalApplicationState.map.draw();
-
     this.filter = new filter(globalApplicationState);
+
+    globalApplicationState.map = new googleMap(globalApplicationState);
+    globalApplicationState.map.draw();
 
     globalApplicationState.monthlyDistribution = new monthlyDistribution(
       globalApplicationState
