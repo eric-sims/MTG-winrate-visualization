@@ -22,12 +22,12 @@ class googleMap {
 
     // we downloaded ufo data from here: https://www.kaggle.com/NUFORC/ufo-sightings 
     //Thanks Kaggle!
-
+    this.globalApplicationState.filteredData = this.globalApplicationState.data.filter(d => d.CRASH_DATETIME.includes("2019")).slice(0, 1000);
     // Load the ufo sighting data. When the data comes back, create an overlay.
-    let data = await d3.csv("data/Utah_Crash_Data_2020_cleaned.csv");
+    let data = this.globalApplicationState.filteredData;
 
     //Filter the data to only see US sightings. Take a sample of 200.
-    let usDataSample = data.filter(d => d.CRASH_DATETIME.includes('2019')).slice(0, 1000);
+    let usDataSample = data;
     
     //Create the overlay that we will draw on
     let overlay = new google.maps.OverlayView();
@@ -36,7 +36,7 @@ class googleMap {
     overlay.onAdd = function () {
 
         //to see all the available panes;
-        console.log(this.getPanes());
+        // console.log(this.getPanes());
 
         let layer = d3.select(this.getPanes().overlayMouseTarget).append("div")
             .attr("class", "ufo");
@@ -46,7 +46,7 @@ class googleMap {
         };
 
         overlay.draw = function () {
-            console.log('here')
+            // console.log('here')
             let projection = this.getProjection(),
                 padding = 10;
 

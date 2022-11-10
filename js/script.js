@@ -11,6 +11,7 @@ Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
 const globalApplicationState = {
   map: null,
   data: null,
+  filteredData: null,
   lineChartSeasonal: null,
   lineChartHourly: null,
   filterSection: null,
