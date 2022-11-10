@@ -17,12 +17,18 @@ class googleMap {
       },
     };
 
-    let map = new google.maps.Map(d3.select("#map").node(), options);
+    this.map = new google.maps.Map(d3.select("#map").node(), options);
 
+    this.overlay = new google.maps.OverlayView();
+
+    this.updateCircles();
+  }
+
+  async updateCircles() {
     let data = this.globalApplicationState.filteredData;
+    let overlay = this.overlay;
 
     //Create the overlay that we will draw on
-    let overlay = new google.maps.OverlayView();
 
     // Add the container when the overlay is added to the map.
     overlay.onAdd = function () {
@@ -86,6 +92,6 @@ class googleMap {
       };
     };
     // Bind our overlay to the map…
-    overlay.setMap(map);
+    overlay.setMap(this.map);
   }
 }
