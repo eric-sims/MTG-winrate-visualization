@@ -75,26 +75,19 @@ class googleMap {
   }
 
   async drawGoogleMap() {
-
-    //added our custom styles to a separate json file
-    // let googleMapStyles = await d3.json("google-map-style.json");
-
-    //You can see what the styles are in the inspector
-    // console.log(googleMapStyles);
-
-    //Our options to pass to our new google map object
     let options = {
-        zoom: 4,
-        center: {
-            lat: 41.4925,
-            lng: -95.8905556,
-        },
-        mapTypeId: 'roadmap',
-        //Style made in the google API style wizard to give the map a UFO feel
-        //You can customize your map styles and and them into a styles array in the options opbject
-        // styles: googleMapStyles.styles
+      zoom: 7,
+      center: {
+        lat: 39.321,
+        lng: -111.0937,
+      },
+      mapTypeId: "roadmap",
+      restriction: {
+        latLngBounds: { north: 43, east: -108, south: 36, west: -114 },
+        strictBounds: false,
+      },
     };
-
+    
     // Create the Google Map…
     let map = new google.maps.Map(d3.select("#map").node(), options);
 
@@ -106,7 +99,7 @@ class googleMap {
 
     //Filter the data to only see US sightings. Take a sample of 200.
     let usDataSample = data.filter(d => d.CRASH_DATETIME.includes('2019')).slice(0, 1000);
-
+    
     //Create the overlay that we will draw on
     let overlay = new google.maps.OverlayView();
 
