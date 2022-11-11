@@ -5,13 +5,13 @@
 }
 
 #filter {
-  background-color: aqua;
+  /* background-color: aqua; */
   margin: 25px;
   height: 70%;
 }
 
 #details {
-  background-color: aqua;
+  /* background-color: aqua; */
   margin: 25px;
 }
 
@@ -29,14 +29,14 @@
 
 #monthlyDistribution {
   width: 50%;
-  background-color: lightgray;
+  /* background-color: lightgray; */
   height: 500px;
   margin: 25px;
 }
 
 #hourlyDistribution {
   width: 50%;
-  background-color: lightgray;
+  /* background-color: lightgray; */
   height: 500px;
   margin: 25px;
 }
