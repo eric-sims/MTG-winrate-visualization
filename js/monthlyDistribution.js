@@ -39,6 +39,15 @@ class monthlyDistribution {
             .attr("width", width)
             .attr("height", height);
 
+        // add title to the chart
+        svg.append("text")
+            .attr("x", (width / 2))
+            .attr("y", 0 + (margin.top))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Crashes per Month");
+
         // create the x axis
         svg.append("g")
             .attr("transform", `translate(${margin.left}, ${height - margin.bottom})`)
