@@ -55,6 +55,8 @@ class filter {
           .filter((d) => d.CRASH_DATETIME.includes(radioEvent.srcElement.value))
           .slice(0, 1000);
       this.globalApplicationState.map.updateCircles();
+      this.globalApplicationState.hourlyDistribution.draw();
+      this.globalApplicationState.monthlyDistribution.draw();
     };
 
     const checkGroups = d3

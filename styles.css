@@ -64,3 +64,14 @@
 .marker :hover{
   cursor: pointer;
 }
+
+.hovered {
+  color: blue;
+  fill: blue;
+}
+
+.clicked {
+  color: green;
+  fill: green;
+  
+}

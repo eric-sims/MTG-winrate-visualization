@@ -4,6 +4,14 @@ class hourlyDistribution {
     }
 
     async draw() {
+        // remove previous svg
+        d3.select("#hourlyDistribution").selectAll("svg").remove();
+
+        // group the data by hour - including separating am/pm (d3 v7)
+        let groupedData = d3.group(this.globalApplicationState.filteredData, d => d.CRASH_DATETIME.split(" ")[1].split(":")[0] + d.CRASH_DATETIME.split(" ")[2]);
+
+        console.log('groupedData - hour', groupedData);
+
         // generate the height and width of the div
         let width = document.getElementById('hourlyDistribution').clientWidth;
         let height = document.getElementById('hourlyDistribution').clientHeight;
@@ -16,7 +24,7 @@ class hourlyDistribution {
         
         // generate a y axis for the chart (number of crashes)
         let y = d3.scaleLinear()
-            .domain([0, 10000])
+            .domain([0, d3.max(groupedData, d => d[1].length)])
             .range([height - margin.top - margin.bottom, 0]);
 
         // create the svg element
@@ -35,11 +43,6 @@ class hourlyDistribution {
             .attr("transform", `translate(${margin.left}, ${margin.top})`)
             .call(d3.axisLeft(y));
 
-        // group the data by hour - including separating am/pm (d3 v7)
-        let groupedData = d3.group(this.globalApplicationState.data.filter(d => d.CRASH_DATETIME.split("/")[2].includes('2019')), d => d.CRASH_DATETIME.split(" ")[1].split(":")[0] + d.CRASH_DATETIME.split(" ")[2]);
-
-        console.log('groupedData - hour', groupedData);
-
         const barGap = 10;
         // create bars for how often each hour occurs
         const rects = svg.selectAll("rect")
@@ -51,11 +54,13 @@ class hourlyDistribution {
             .attr("width", x.bandwidth() - barGap)
             .attr("height", d => height - margin.top - margin.bottom - y(d[1].length))
             .attr("fill", "red")
-            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            .attr("transform", `translate(${margin.left}, ${margin.top})`)
+            .classed("clicked", false);
 
         // if a mouse is hovering over a bar, highlight it as well as the data points on the map, and display the number of crashes, while hovering over the bar
         rects.on("mouseover", (event, d) => {
-            d3.select(event.target).attr("fill", "blue");
+            // console.log(event.target);
+            d3.select(event.target).classed("hovered", true);
             d3.select("#hourlyDistribution").append("div")
                 .attr("id", "tooltip")
                 .style("position", "absolute")
@@ -67,13 +72,21 @@ class hourlyDistribution {
                 .text(d[1].length + " crashes");
             
             // this.globalApplicationState.filteredData = d[1];
-            // this.globalApplicationState.map.draw();
+            // this.globalApplicationState.map.updateCircles();
         });
 
         // if the mouse is no longer hovering over a bar, remove the highlight and the tooltip
         rects.on("mouseout", (event, d) => {
-            d3.select(event.target).attr("fill", "red");
+            d3.select(event.target).classed("hovered", false);
             d3.select("#tooltip").remove();
+        });
+
+        // if a bar is clicked, color the rectangle and corresponding data points on the map green
+        rects.on("click", (event, d) => {
+            // toggle if the bar is clicked or not
+            d3.select(event.target).classed("clicked", !d3.select(event.target).classed("clicked"));
+            
+            this.globalApplicationState.map.colorCircles(d[1], d3.select(event.target).classed("clicked"));
         });
 
     }

@@ -77,8 +77,10 @@ class googleMap {
           .attr("cy", padding)
           .style("opacity", 0.8)
           .attr("fill", "red")
+          .attr('id', d => 'CRASH'+d.CRASH_ID)
           .on("click", (event, data) => {
             console.log("clicked", data);
+            console.log('clicledd', event);
             d3.select("#details").html(
               `<h3>Accident Details</h3>
               <p>Accident ID: ${data.CRASH_ID}</p>
@@ -103,5 +105,11 @@ class googleMap {
     };
     // Bind our overlay to the map…
     overlay.setMap(this.map);
+  }
+
+  colorCircles(circles, clicked) {
+    for (let i = 0; i < circles.length; i++) {
+      d3.select(`#CRASH${circles[i].CRASH_ID}`).classed('clicked', clicked);
+    }
   }
 }
