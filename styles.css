@@ -1,17 +1,22 @@
 #map {
   width: 50%;
   height: 600px;
-  margin: 50px;
+  margin: 25px;
 }
 
 #filter {
   background-color: aqua;
-  margin: 50px;
+  margin: 25px;
   height: 70%;
 }
 
+#details {
+  background-color: aqua;
+  margin: 25px;
+}
+
 #filter-container{
-    width:50%;
+    width: 50%;
     display: flex;
     flex-direction: column;
 }
@@ -19,21 +24,21 @@
 #filler-space{
     background-color: blue;
     height: 30%;
-    margin: 50px;
+    margin: 25px;
 }
 
 #monthlyDistribution {
   width: 50%;
   background-color: lightgray;
   height: 500px;
-  margin: 50px;
+  margin: 25px;
 }
 
 #hourlyDistribution {
   width: 50%;
   background-color: lightgray;
   height: 500px;
-  margin: 50px;
+  margin: 25px;
 }
 
 .text-check-group{

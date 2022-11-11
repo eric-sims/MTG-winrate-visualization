@@ -77,7 +77,17 @@ class googleMap {
           .attr("cy", padding)
           .style("opacity", 0.8)
           .attr("fill", "red")
-          .on("click", (d) => console.log(d));
+          .on("click", (event, data) => {
+            console.log("clicked", data);
+            d3.select("#details").html(
+              `<h3>Accident Details</h3>
+              <p>Accident ID: ${data.CRASH_ID}</p>
+              <p>Accident Date: ${data.CRASH_DATETIME}</p>
+              <p>Accident Severity: ${data.CRASH_SEVERITY_ID}</p>
+              <p>City/County: ${data.CITY}/${data.COUNTY_NAME}</p>
+              `);
+
+          });
 
         //transforms the markers to the right
         // lat / lng using the projection from google maps

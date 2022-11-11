@@ -42,7 +42,7 @@ class hourlyDistribution {
 
         const barGap = 10;
         // create bars for how often each hour occurs
-        svg.selectAll("rect")
+        const rects = svg.selectAll("rect")
             .data(groupedData)
             .enter()
             .append("rect")
@@ -52,6 +52,29 @@ class hourlyDistribution {
             .attr("height", d => height - margin.top - margin.bottom - y(d[1].length))
             .attr("fill", "red")
             .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        // if a mouse is hovering over a bar, highlight it as well as the data points on the map, and display the number of crashes, while hovering over the bar
+        rects.on("mouseover", (event, d) => {
+            d3.select(event.target).attr("fill", "blue");
+            d3.select("#hourlyDistribution").append("div")
+                .attr("id", "tooltip")
+                .style("position", "absolute")
+                .style("top", event.pageY + 10 + "px")
+                .style("left", event.pageX + 10 + "px")
+                .style("background-color", "white")
+                .style("border", "1px solid black")
+                .style("padding", "5px")
+                .text(d[1].length + " crashes");
+            
+            // this.globalApplicationState.filteredData = d[1];
+            // this.globalApplicationState.map.draw();
+        });
+
+        // if the mouse is no longer hovering over a bar, remove the highlight and the tooltip
+        rects.on("mouseout", (event, d) => {
+            d3.select(event.target).attr("fill", "red");
+            d3.select("#tooltip").remove();
+        });
 
     }
 }
