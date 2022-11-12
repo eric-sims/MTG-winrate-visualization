@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>
-      Visualization - Project Alan and Eric
-    </title>
+    <title>Visualization - Project Alan and Eric</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- <link
       href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap"
@@ -30,17 +28,30 @@
       </header>
     </div>
     <div id="visualization">
-      <div id="map-filter">
+      <div id="map-filter" class="d-flex">
         <div id="map"></div>
-        <div id="filter"></div>
+        <div id="filter-container">
+          <div id="details"><h3>(Click on crash in map to display more info)</h3></div>
+          <div id="filter">
+            <h3> Filter</h3>
+            <hr />
+            <div id="filter-options">
+              <div id="checkboxes"></div>
+              <form id="year-radio"></form>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="distributions">
-        <div id="year-distribution"></div>
-        <div id="hour-distribution"></div>
+      <div id="distributions" class="d-flex">
+        <div id="monthlyDistribution"></div>
+        <div id="hourlyDistribution"></div>
       </div>
     </div>
 
+    <script src="js/filter.js"></script>
     <script src="js/script.js"></script>
     <script src="js/googleMap.js"></script>
+    <script src="js/hourlyDistribution.js"></script>
+    <script src="js/monthlyDistribution.js"></script>
   </body>
 </html>

@@ -1,8 +1,29 @@
+Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
+  (data) => {
+    globalApplicationState.data = data[0];
+    // console.log('length of data', data[0].length);
+    this.filter = new filter(globalApplicationState);
 
-Promise.all([d3.csv('../data/Utah_Crash_Data_2020.csv')]).then( data =>
-    {
-        let crashData = data[0];
-        
-        let table = new googleMap(crashData);
-        table.draw();
-    });
+    globalApplicationState.map = new googleMap(globalApplicationState);
+    globalApplicationState.map.draw();
+
+    globalApplicationState.monthlyDistribution = new monthlyDistribution(
+      globalApplicationState
+    );
+    globalApplicationState.monthlyDistribution.draw();
+
+    globalApplicationState.hourlyDistribution = new hourlyDistribution(
+      globalApplicationState
+    );
+    globalApplicationState.hourlyDistribution.draw();
+  }
+);
+
+const globalApplicationState = {
+  map: null,
+  data: null,
+  filteredData: null,
+  hourlyDistribution: null,
+  monthlyDistribution: null,
+  filterSection: null,
+};

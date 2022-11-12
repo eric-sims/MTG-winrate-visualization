@@ -1,8 +1,77 @@
-#map{
-    width: 50%;
+#map {
+  width: 50%;
+  height: 600px;
+  margin: 25px;
 }
 
-#filter{
+#filter {
+  /* background-color: aqua; */
+  margin: 25px;
+  height: 70%;
+}
+
+#details {
+  /* background-color: aqua; */
+  margin: 25px;
+}
+
+#filter-container{
     width: 50%;
-    color:aqua;
+    display: flex;
+    flex-direction: column;
+}
+
+#filler-space{
+    background-color: blue;
+    height: 30%;
+    margin: 25px;
+}
+
+#monthlyDistribution {
+  width: 50%;
+  /* background-color: lightgray; */
+  height: 500px;
+  margin: 25px;
+}
+
+#hourlyDistribution {
+  width: 50%;
+  /* background-color: lightgray; */
+  height: 500px;
+  margin: 25px;
+}
+
+.text-check-group{
+  display: inline-block;
+  width: 50%;
+}
+
+.right{
+  right:100px;
+}
+
+.accident {
+  position: absolute;
+}
+
+.accident svg {
+  width: 40px;
+  height: 40px;
+  font: 10px sans-serif;
+  position: absolute;
+}
+
+.marker :hover{
+  cursor: pointer;
+}
+
+.hovered {
+  color: blue;
+  fill: blue;
+}
+
+.clicked {
+  color: green;
+  fill: green;
+  
 }
