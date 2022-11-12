@@ -5,15 +5,11 @@ class googleMap {
 
   async draw() {
     let options = {
+      mapId: "roadMap",
       zoom: 7,
       center: {
-        lat: 39.321,
+        lat: 39.52,
         lng: -111.0937,
-      },
-      mapTypeId: "roadmap",
-      restriction: {
-        latLngBounds: { north: 43, east: -108, south: 36, west: -114 },
-        strictBounds: false,
       },
     };
 
@@ -51,7 +47,7 @@ class googleMap {
             d3.min(data, (d) => d.CRASH_SEVERITY_ID),
             d3.max(data, (d) => d.CRASH_SEVERITY_ID),
           ])
-          .range([2, 7])
+          .range([5, 10])
           .clamp(true);
 
         // Draw each marker as a separate SVG element.
@@ -86,6 +82,7 @@ class googleMap {
               <p>Accident ID: ${data.CRASH_ID}</p>
               <p>Accident Date: ${data.CRASH_DATETIME}</p>
               <p>Accident Severity: ${data.CRASH_SEVERITY_ID}</p>
+              <p>Road: ${data.MAIN_ROAD_NAME}</p>
               <p>City/County: ${data.CITY}/${data.COUNTY_NAME}</p>
               `);
 
