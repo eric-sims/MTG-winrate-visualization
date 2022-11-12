@@ -10,7 +10,7 @@ class hourlyDistribution {
         // group the data by hour - including separating am/pm (d3 v7)
         let groupedData = d3.group(this.globalApplicationState.filteredData, d => d.CRASH_DATETIME.split(" ")[1].split(":")[0] + d.CRASH_DATETIME.split(" ")[2]);
 
-        console.log('groupedData - hour', groupedData);
+        // console.log('groupedData - hour', groupedData);
 
         // generate the height and width of the div
         let width = document.getElementById('hourlyDistribution').clientWidth;

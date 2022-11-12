@@ -9,9 +9,9 @@ class monthlyDistribution {
 
         // group the data by month (d3 v7)
         let groupedData = d3.group(this.globalApplicationState.filteredData, d => d.CRASH_DATETIME.split("/")[0]);
-        console.log(this.globalApplicationState.filteredData[102]);
-        console.log(this.globalApplicationState.filteredData[102].CRASH_DATETIME.split("/")[0]);
-        console.log('groupedData', groupedData);
+        // console.log(this.globalApplicationState.filteredData[102]);
+        // console.log(this.globalApplicationState.filteredData[102].CRASH_DATETIME.split("/")[0]);
+        // console.log('groupedData', groupedData);
 
         // get the height and width of the div
         let width = document.getElementById('monthlyDistribution').clientWidth;
@@ -99,8 +99,8 @@ class monthlyDistribution {
         // if a bar is clicked, filter the data to only include the data points that occurred in that month
         rects.on("click", (event, d) => {
             // console.log(d[1]);
-            console.log(event);
-            console.log(d);
+            // console.log(event);
+            // console.log(d);
 
             d3.select(event.target).classed('clicked', !d3.select(event.target).classed('clicked'));
             

@@ -75,8 +75,8 @@ class googleMap {
           .attr("fill", "red")
           .attr('id', d => 'CRASH'+d.CRASH_ID)
           .on("click", (event, data) => {
-            console.log("clicked", data);
-            console.log('clicledd', event);
+            // console.log("clicked", data);
+            // console.log('clicledd', event);
             d3.select("#details").html(
               `<h3>Accident Details</h3>
               <p>Accident ID: ${data.CRASH_ID}</p>

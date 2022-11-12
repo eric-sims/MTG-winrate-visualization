@@ -49,7 +49,7 @@ class filter {
     radioGroups.append("text").text((d) => d);
 
     const updateRadio = (radioEvent) => {
-      console.log(radioEvent.srcElement.value);
+      // console.log(radioEvent.srcElement.value);
       this.globalApplicationState.filteredData =
         this.globalApplicationState.data
           .filter((d) => d.CRASH_DATETIME.includes(radioEvent.srcElement.value))
@@ -75,7 +75,7 @@ class filter {
       .on("change", (d) => updateCheck(d));
 
     function updateCheck(d) {
-      console.log("data", d.srcElement.value);
+      // console.log("data", d.srcElement.value);
     }
 
     checkGroups.append("text").text((d) => d.name);
