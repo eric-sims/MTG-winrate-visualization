@@ -61,17 +61,30 @@ class monthlyDistribution {
             .call(d3.axisLeft(y));
 
         const barGap = 10;
-        // create bars for how often each month occurs
+
         const rects = svg.selectAll("rect")
             .data(groupedData)
-            .enter()
-            .append("rect")
-            .attr("x", d => x(monthName(d[0])) + barGap/2)
-            .attr("y", d => y(d[1].length))
-            .attr("width", x.bandwidth() - barGap)
-            .attr("height", d => height - margin.top - margin.bottom - y(d[1].length))
-            .attr("fill", "red")
-            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            .join(
+                enter => enter.append("rect")
+                    .attr("x", d => x(monthName(d[0])) + barGap/2)
+                    .attr("y", d => y(0))
+                    .attr("width", x.bandwidth() - barGap)
+                    .attr("height", d => height - margin.top - margin.bottom - y(0))
+                    .attr("fill", "red")
+                    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+                    .transition()
+                    .duration(1000)
+                    .attr("y", d => y(d[1].length))
+                    .attr("height", d => height - margin.top - margin.bottom - y(d[1].length)),
+                update => update.transition()
+                    .duration(1000)
+                    .attr("y", d => y(d[1].length))
+                    .attr("height", d => height - margin.top - margin.bottom - y(d[1].length)),
+                exit => exit.remove()
+            );
+
+        
+
 
         // if a mouse is hovering over a bar, highlight it as well as the data points on the map, and display the number of crashes, while hovering over the bar
         rects.on("mouseover", (event, d) => {
