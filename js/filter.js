@@ -7,6 +7,11 @@ class filter {
         d.CRASH_DATETIME.includes("2019")
       );
 
+    this.globalApplicationState.filterOptions = {
+      includeYear: "2019",
+      includeAnd: [],
+    };
+
     const booleanData = [
       { type: "BICYCLIST_INVOLVED", name: "Bicyclist Involved" },
       {
@@ -44,17 +49,44 @@ class filter {
       .attr("type", "radio")
       .attr("value", (d) => d)
       .attr("name", "year")
-      .on("change", (d) => updateRadio(d))
+      .on("change", (d) => updateYear(d))
       .filter((d, i) => +d === 2019)
       .attr("checked", "true");
     radioGroups.append("text").text((d) => d);
 
-    const updateRadio = (radioEvent) => {
-      // console.log(radioEvent.srcElement.value);
+    const updateYear = (radioEvent) => {
+      this.globalApplicationState.filterOptions.includeYear =
+        radioEvent.srcElement.value;
+      updateFilteredData();
+    };
+
+    const updateFilteredData = () => {
+      let includeAnd = this.globalApplicationState.filterOptions.includeAnd;
+      //First filter by the year
       this.globalApplicationState.filteredData =
         this.globalApplicationState.data.filter((d) =>
-          d.CRASH_DATETIME.includes(radioEvent.srcElement.value)
+          d.CRASH_DATETIME.includes(
+            this.globalApplicationState.filterOptions.includeYear
+          )
         );
+
+      //Then we filter by required 'and' filters
+      this.globalApplicationState.filteredData =
+        this.globalApplicationState.filteredData.filter((d) => {
+          let toReturn = true;
+          if (includeAnd[0]) {
+            includeAnd.forEach((attribute) => {
+              if (!d[attribute]) {
+                toReturn = false;
+              }
+            });
+          }
+          return toReturn;
+        });
+      updatVisualizations();
+    };
+
+    const updatVisualizations = () => {
       this.globalApplicationState.map.updateCircles();
       this.globalApplicationState.hourlyDistribution.draw();
       this.globalApplicationState.monthlyDistribution.draw();
@@ -75,9 +107,16 @@ class filter {
       .attr("value", (d) => d.type)
       .on("change", (d) => updateCheck(d));
 
-    function updateCheck(d) {
-      // console.log("data", d.srcElement.value);
-    }
+    const updateCheck = (d) => {
+      let includeAnd = this.globalApplicationState.filterOptions.includeAnd;
+      if (includeAnd.includes(d.srcElement.value)) {
+        includeAnd = includeAnd.filter((type) => type !== d.srcElement.value);
+      } else {
+        includeAnd.push(d.srcElement.value);
+      }
+      this.globalApplicationState.filterOptions.includeAnd = includeAnd;
+      updateFilteredData();
+    };
 
     checkGroups.append("text").text((d) => d.name);
     checkGroups.filter((d, i) => i % 2).append("br");
