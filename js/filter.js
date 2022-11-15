@@ -2,9 +2,10 @@ class filter {
   constructor(globalApplicationState) {
     this.globalApplicationState = globalApplicationState;
 
-    this.globalApplicationState.filteredData = this.globalApplicationState.data
-      .filter((d) => d.CRASH_DATETIME.includes("2019"))
-      .slice(0, 1000);
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.data.filter((d) =>
+        d.CRASH_DATETIME.includes("2019")
+      );
 
     const booleanData = [
       { type: "BICYCLIST_INVOLVED", name: "Bicyclist Involved" },
@@ -51,9 +52,9 @@ class filter {
     const updateRadio = (radioEvent) => {
       // console.log(radioEvent.srcElement.value);
       this.globalApplicationState.filteredData =
-        this.globalApplicationState.data
-          .filter((d) => d.CRASH_DATETIME.includes(radioEvent.srcElement.value))
-          .slice(0, 1000);
+        this.globalApplicationState.data.filter((d) =>
+          d.CRASH_DATETIME.includes(radioEvent.srcElement.value)
+        );
       this.globalApplicationState.map.updateCircles();
       this.globalApplicationState.hourlyDistribution.draw();
       this.globalApplicationState.monthlyDistribution.draw();
