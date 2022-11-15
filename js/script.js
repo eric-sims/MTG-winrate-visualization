@@ -1,4 +1,4 @@
-Promise.all([d3.csv("../data/Utah_Crash_Data_2020_cleaned.csv")]).then(
+Promise.all([d3.csv("./data/Utah_Crash_Data_2020_cleaned.csv")]).then(
   (data) => {
     globalApplicationState.data = data[0];
     // console.log('length of data', data[0].length);
