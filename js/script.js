@@ -1,5 +1,9 @@
+let counties = ["ANY"];
 Promise.all([
   d3.csv("./data/Utah_Crash_Data_2020_cleaned.csv", function (d, i) {
+    if (!counties.includes(d.COUNTY_NAME)) {
+      counties.push(d.COUNTY_NAME);
+    }
     return {
       BICYCLIST_INVOLVED: d.BICYCLIST_INVOLVED == "True",
       CITY: d.CITY,
@@ -36,6 +40,7 @@ Promise.all([
   }),
 ]).then((data) => {
   globalApplicationState.data = data[0];
+  globalApplicationState.counties = counties;
   this.filter = new filter(globalApplicationState);
 
   globalApplicationState.map = new googleMap(globalApplicationState);

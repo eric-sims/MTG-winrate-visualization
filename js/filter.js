@@ -14,6 +14,7 @@ class filter {
       includeNot: [],
       severityMin: 1,
       severityMax: 5,
+      selectedCounty: "ANY",
     };
 
     const booleanData = [
@@ -40,27 +41,48 @@ class filter {
       { type: "WILD_ANIMAL_RELATED", name: "Wild Animal Related" },
       { type: "WORK_ZONE_RELATED", name: "Work Zone Related" },
     ];
+    //Add county selectors
+    console.log(this.globalApplicationState.counties);
+    const selectorGroup = d3.select("#advanced").append("g");
+    selectorGroup.append("text").text("County:");
+    let citySelect = selectorGroup
+      .append("select")
+      .attr("id", "city-select")
+      .on("change", (d) => onCityChange(d));
+    citySelect
+      .selectAll("option")
+      .data(this.globalApplicationState.counties)
+      .join("option")
+      .text((d) => d)
+      .attr("type", (d) => d);
+    selectorGroup.append("br");
+
+    const onCityChange = (d) => {
+      this.globalApplicationState.filterOptions.selectedCounty =
+        d.srcElement.value;
+      this.updateFilteredData();
+    };
 
     //Add Severity Sliders
-    const severitSvg = d3.select("#advanced").append("g");
-    severitSvg.append("text").text("Minimum Severity");
-    severitSvg
+    const severitGroup = d3.select("#advanced").append("g");
+    severitGroup.append("text").text("Minimum Severity");
+    severitGroup
       .append("input")
       .attr("type", "range")
       .attr("min", 1)
       .attr("max", 5)
       .attr("value", 0)
       .on("change", (d) => updateMinSlider(d));
-    severitSvg.append("br");
-    severitSvg.append("text").text("Maximum Severity");
-    severitSvg
+    severitGroup.append("br");
+    severitGroup.append("text").text("Maximum Severity");
+    severitGroup
       .append("input")
       .attr("type", "range")
       .attr("min", 1)
       .attr("max", 5)
       .attr("value", 5)
       .on("change", (d) => updateMaxSlider(d));
-    severitSvg.append("br");
+    severitGroup.append("br");
 
     const updateMinSlider = (d) => {
       this.globalApplicationState.filterOptions.severityMin =
@@ -148,6 +170,16 @@ class filter {
           this.globalApplicationState.filterOptions.includeYear
         )
       );
+
+    //Then filter by county
+    if (this.globalApplicationState.filterOptions.selectedCounty !== "ANY") {
+      this.globalApplicationState.filteredData =
+        this.globalApplicationState.filteredData.filter(
+          (d) =>
+            d.COUNTY_NAME ===
+            this.globalApplicationState.filterOptions.selectedCounty
+        );
+    }
 
     //Then filter by the severity
     this.globalApplicationState.filteredData =
