@@ -31,13 +31,57 @@
       <div id="map-filter" class="d-flex">
         <div id="map"></div>
         <div id="filter-container">
-          <div id="details"><h3>(Click on crash in map to display more info)</h3></div>
+          <div id="details">
+            <h3>(Click on crash in map to display more info)</h3>
+          </div>
           <div id="filter">
-            <h3> Filter</h3>
+            <h3>Filter</h3>
             <hr />
+            <div class="tab">
+              <button
+                class="tablinks active"
+                id="advanced-button"
+                onclick="openTab(event, 'advanced')"
+              >
+                Advanced
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-and-button"
+                onclick="openTab(event, 'checkboxes-and')"
+              >
+                "And" Condition
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-or-button"
+                onclick="openTab(event, 'checkboxes-or')"
+              >
+                "Or" condition
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-not-button"
+                onclick="openTab(event, 'checkboxes-not')"
+              >
+                "Not" condition
+              </button>
+            </div>
             <div id="filter-options">
-              <div id="checkboxes"></div>
-              <form id="year-radio"></form>
+              <div class="tabcontent" id="advanced">
+                <form id="year-radio"></form>
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-and">
+                Display every result that contains ALL the specified conditions
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-or">
+                Display every result that contains NONE of the selected
+                conditions
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-not">
+                Display every result that contains ANY of the selected
+                conditions
+              </div>
             </div>
           </div>
         </div>

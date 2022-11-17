@@ -61,3 +61,10 @@ const globalApplicationState = {
   filterSection: null,
   filterOptions: null,
 };
+
+function openTab(event, tabName) {
+  d3.selectAll(".tabcontent").classed("d-none", true);
+  d3.select("#" + tabName).classed("d-none", false);
+  d3.selectAll(".tablinks").classed("active", false);
+  d3.select("#" + tabName + "-button").classed("active", true);
+}

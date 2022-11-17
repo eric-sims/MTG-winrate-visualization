@@ -10,6 +10,10 @@ class filter {
     this.globalApplicationState.filterOptions = {
       includeYear: "2019",
       includeAnd: [],
+      includeOr: [],
+      includeNot: [],
+      severityMin: 1,
+      severityMax: 5,
     };
 
     const booleanData = [
@@ -37,8 +41,41 @@ class filter {
       { type: "WORK_ZONE_RELATED", name: "Work Zone Related" },
     ];
 
+    //Add Severity Sliders
+    const severitSvg = d3.select("#advanced").append("g");
+    severitSvg.append("text").text("Minimum Severity");
+    severitSvg
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 1)
+      .attr("max", 5)
+      .attr("value", 0)
+      .on("change", (d) => updateMinSlider(d));
+    severitSvg.append("br");
+    severitSvg.append("text").text("Maximum Severity");
+    severitSvg
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 1)
+      .attr("max", 5)
+      .attr("value", 5)
+      .on("change", (d) => updateMaxSlider(d));
+    severitSvg.append("br");
+
+    const updateMinSlider = (d) => {
+      this.globalApplicationState.filterOptions.severityMin =
+        d.srcElement.value;
+      this.updateFilteredData();
+    };
+    const updateMaxSlider = (d) => {
+      this.globalApplicationState.filterOptions.severityMax =
+        d.srcElement.value;
+      this.updateFilteredData();
+    };
+
     const years = [2016, 2017, 2018, 2019];
 
+    // Add radio buttons for years
     const radioGroups = d3
       .select("#year-radio")
       .selectAll("g")
@@ -57,43 +94,12 @@ class filter {
     const updateYear = (radioEvent) => {
       this.globalApplicationState.filterOptions.includeYear =
         radioEvent.srcElement.value;
-      updateFilteredData();
+      this.updateFilteredData();
     };
 
-    const updateFilteredData = () => {
-      let includeAnd = this.globalApplicationState.filterOptions.includeAnd;
-      //First filter by the year
-      this.globalApplicationState.filteredData =
-        this.globalApplicationState.data.filter((d) =>
-          d.CRASH_DATETIME.includes(
-            this.globalApplicationState.filterOptions.includeYear
-          )
-        );
-
-      //Then we filter by required 'and' filters
-      this.globalApplicationState.filteredData =
-        this.globalApplicationState.filteredData.filter((d) => {
-          let toReturn = true;
-          if (includeAnd[0]) {
-            includeAnd.forEach((attribute) => {
-              if (!d[attribute]) {
-                toReturn = false;
-              }
-            });
-          }
-          return toReturn;
-        });
-      updatVisualizations();
-    };
-
-    const updatVisualizations = () => {
-      this.globalApplicationState.map.updateCircles();
-      this.globalApplicationState.hourlyDistribution.draw();
-      this.globalApplicationState.monthlyDistribution.draw();
-    };
-
+    //Add checkboxes to correct sections
     const checkGroups = d3
-      .select("#checkboxes")
+      .selectAll(".checkboxes")
       .selectAll("g")
       .data(booleanData)
       .join("g")
@@ -108,17 +114,107 @@ class filter {
       .on("change", (d) => updateCheck(d));
 
     const updateCheck = (d) => {
-      let includeAnd = this.globalApplicationState.filterOptions.includeAnd;
-      if (includeAnd.includes(d.srcElement.value)) {
-        includeAnd = includeAnd.filter((type) => type !== d.srcElement.value);
-      } else {
-        includeAnd.push(d.srcElement.value);
+      const parentId = d.srcElement.parentElement.parentElement.id;
+      let filterOption;
+      if (parentId == "checkboxes-and") {
+        filterOption = "includeAnd";
       }
-      this.globalApplicationState.filterOptions.includeAnd = includeAnd;
-      updateFilteredData();
+      if (parentId == "checkboxes-or") {
+        filterOption = "includeOr";
+      }
+      if (parentId == "checkboxes-not") {
+        filterOption = "includeNot";
+      }
+
+      let include = this.globalApplicationState.filterOptions[filterOption];
+      if (include.includes(d.srcElement.value)) {
+        include = include.filter((type) => type !== d.srcElement.value);
+      } else {
+        include.push(d.srcElement.value);
+      }
+      this.globalApplicationState.filterOptions[filterOption] = include;
+      this.updateFilteredData();
     };
 
     checkGroups.append("text").text((d) => d.name);
     checkGroups.filter((d, i) => i % 2).append("br");
+  }
+
+  updateFilteredData() {
+    //First filter by the year
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.data.filter((d) =>
+        d.CRASH_DATETIME.includes(
+          this.globalApplicationState.filterOptions.includeYear
+        )
+      );
+
+    //Then filter by the severity
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.filteredData.filter((d) => {
+        let toReturn = true;
+        if (
+          +d.CRASH_SEVERITY_ID <
+            this.globalApplicationState.filterOptions.severityMin ||
+          +d.CRASH_SEVERITY_ID >
+            this.globalApplicationState.filterOptions.severityMax
+        ) {
+          toReturn = false;
+        }
+        return toReturn;
+      });
+
+    let includeAnd = this.globalApplicationState.filterOptions.includeAnd;
+    //Then we filter by required 'and' filters
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.filteredData.filter((d) => {
+        let toReturn = true;
+        if (includeAnd[0]) {
+          includeAnd.forEach((attribute) => {
+            if (!d[attribute]) {
+              toReturn = false;
+            }
+          });
+        }
+        return toReturn;
+      });
+
+    let includeOr = this.globalApplicationState.filterOptions.includeOr;
+    //Then we filter by required 'or' filters
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.filteredData.filter((d) => {
+        let toReturn = true;
+        if (includeOr[0]) {
+          toReturn = false;
+          includeOr.forEach((attribute) => {
+            if (d[attribute]) {
+              toReturn = true;
+            }
+          });
+        }
+        return toReturn;
+      });
+
+    let includeNot = this.globalApplicationState.filterOptions.includeNot;
+    //Then we filter by required 'not' filters
+    this.globalApplicationState.filteredData =
+      this.globalApplicationState.filteredData.filter((d) => {
+        let toReturn = true;
+        if (includeNot[0]) {
+          includeNot.forEach((attribute) => {
+            if (d[attribute]) {
+              toReturn = false;
+            }
+          });
+        }
+        return toReturn;
+      });
+    this.updatVisualizations();
+  }
+
+  updatVisualizations() {
+    this.globalApplicationState.map.updateCircles();
+    this.globalApplicationState.hourlyDistribution.draw();
+    this.globalApplicationState.monthlyDistribution.draw();
   }
 }
