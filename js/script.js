@@ -51,11 +51,13 @@ Promise.all([
   );
   globalApplicationState.monthlyDistribution.draw();
 
-  globalApplicationState.hourlyDistribution = new hourlyDistribution(
-    globalApplicationState
-  );
-  globalApplicationState.hourlyDistribution.draw();
-});
+    globalApplicationState.hourlyDistribution = new hourlyDistribution(globalApplicationState);
+    globalApplicationState.hourlyDistribution.draw();
+
+    globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
+    globalApplicationState.arcDiagram.draw();
+  }
+);
 
 const globalApplicationState = {
   map: null,
@@ -65,6 +67,7 @@ const globalApplicationState = {
   monthlyDistribution: null,
   filterSection: null,
   filterOptions: null,
+  arcDiagram: null,
 };
 
 function openTab(event, tabName) {
