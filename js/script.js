@@ -38,9 +38,13 @@ Promise.all([
       lon: d.lon,
     };
   }),
+  d3.json("./data/links.json", function(data) {
+    return data;
+  })
 ]).then((data) => {
   globalApplicationState.data = data[0];
   globalApplicationState.counties = counties;
+  globalApplicationState.links = data[1]["data"];
   this.filter = new filter(globalApplicationState);
 
   globalApplicationState.map = new googleMap(globalApplicationState);
@@ -59,6 +63,8 @@ Promise.all([
   }
 );
 
+
+
 const globalApplicationState = {
   map: null,
   data: null,
@@ -68,6 +74,7 @@ const globalApplicationState = {
   filterSection: null,
   filterOptions: null,
   arcDiagram: null,
+  links: null,
 };
 
 function openTab(event, tabName) {
