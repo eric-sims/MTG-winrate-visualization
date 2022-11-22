@@ -17,7 +17,7 @@ class filter {
       selectedCounty: "ANY",
     };
 
-    const booleanData = [
+    const booleanDataNames = [
       { type: "BICYCLIST_INVOLVED", name: "Bicyclist Involved" },
       {
         type: "COMMERCIAL_MOTOR_VEH_INVOLVED",
@@ -41,8 +41,9 @@ class filter {
       { type: "WILD_ANIMAL_RELATED", name: "Wild Animal Related" },
       { type: "WORK_ZONE_RELATED", name: "Work Zone Related" },
     ];
-    //Add county selectors
-    console.log(this.globalApplicationState.counties);
+
+    this.globalApplicationState.booleanDataNames = booleanDataNames;
+
     const selectorGroup = d3.select("#advanced").append("g");
     selectorGroup.append("text").text("County:");
     let citySelect = selectorGroup
@@ -123,7 +124,7 @@ class filter {
     const checkGroups = d3
       .selectAll(".checkboxes")
       .selectAll("g")
-      .data(booleanData)
+      .data(booleanDataNames)
       .join("g")
       .classed("text-check-group", true)
       .classed("left", (d, i) => (i % 2) - 1)

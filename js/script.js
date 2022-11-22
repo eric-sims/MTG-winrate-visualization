@@ -38,9 +38,9 @@ Promise.all([
       lon: d.lon,
     };
   }),
-  d3.json("./data/links.json", function(data) {
+  d3.json("./data/links.json", function (data) {
     return data;
-  })
+  }),
 ]).then((data) => {
   globalApplicationState.data = data[0];
   globalApplicationState.counties = counties;
@@ -55,15 +55,14 @@ Promise.all([
   );
   globalApplicationState.monthlyDistribution.draw();
 
-    globalApplicationState.hourlyDistribution = new hourlyDistribution(globalApplicationState);
-    globalApplicationState.hourlyDistribution.draw();
+  globalApplicationState.hourlyDistribution = new hourlyDistribution(
+    globalApplicationState
+  );
+  globalApplicationState.hourlyDistribution.draw();
 
-    globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
-    globalApplicationState.arcDiagram.draw();
-  }
-);
-
-
+  globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
+  globalApplicationState.arcDiagram.draw();
+});
 
 const globalApplicationState = {
   map: null,
