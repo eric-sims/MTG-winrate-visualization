@@ -21,7 +21,8 @@ class googleMap {
   }
 
   async updateCircles() {
-    let data = this.globalApplicationState.filteredData;
+    let data = this.globalApplicationState.filteredData.slice(0, 1000);
+    let dataCount = data.length; // We should display a string saying how many crashes we are showing
     let overlay = this.overlay;
 
     //Create the overlay that we will draw on
@@ -73,7 +74,7 @@ class googleMap {
           .attr("cy", padding)
           .style("opacity", 0.8)
           .attr("fill", "red")
-          .attr('id', d => 'CRASH'+d.CRASH_ID)
+          .attr("id", (d) => "CRASH" + d.CRASH_ID)
           .on("click", (event, data) => {
             // console.log("clicked", data);
             // console.log('clicledd', event);
@@ -84,8 +85,8 @@ class googleMap {
               <p>Accident Severity: ${data.CRASH_SEVERITY_ID}</p>
               <p>Road: ${data.MAIN_ROAD_NAME}</p>
               <p>City/County: ${data.CITY}/${data.COUNTY_NAME}</p>
-              `);
-
+              `
+            );
           });
 
         //transforms the markers to the right
@@ -106,7 +107,7 @@ class googleMap {
 
   colorCircles(circles, clicked) {
     for (let i = 0; i < circles.length; i++) {
-      d3.select(`#CRASH${circles[i].CRASH_ID}`).classed('clicked', clicked);
+      d3.select(`#CRASH${circles[i].CRASH_ID}`).classed("clicked", clicked);
     }
   }
 }

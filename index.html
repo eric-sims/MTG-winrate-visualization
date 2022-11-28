@@ -20,7 +20,7 @@
 
   <body>
     <div id="header-wrap">
-      <header>
+      <header class="header">
         <h1>Utah Car Accident Visualization</h1>
         <div>
           Name: Alan Bird, Eric Sims; E-Mail: u1247999@utah.edu; UID: u1247999
@@ -31,13 +31,55 @@
       <div id="map-filter" class="d-flex">
         <div id="map"></div>
         <div id="filter-container">
-          <div id="details"><h3>(Click on crash in map to display more info)</h3></div>
+          <div id="details">
+            <h3>(Click on crash in map to display more info)</h3>
+          </div>
           <div id="filter">
-            <h3> Filter</h3>
-            <hr />
-            <div id="filter-options">
-              <div id="checkboxes"></div>
-              <form id="year-radio"></form>
+            <div class="tab">
+              <button
+                class="tablinks active"
+                id="advanced-button"
+                onclick="openTab(event, 'advanced')"
+              >
+                Advanced
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-and-button"
+                onclick="openTab(event, 'checkboxes-and')"
+              >
+                "And" Condition
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-or-button"
+                onclick="openTab(event, 'checkboxes-or')"
+              >
+                "Or" condition
+              </button>
+              <button
+                class="tablinks"
+                id="checkboxes-not-button"
+                onclick="openTab(event, 'checkboxes-not')"
+              >
+                "Not" condition
+              </button>
+            </div>
+            <div id="filter-options" class="p-3">
+              <div class="tabcontent" id="advanced">
+                <form id="year-radio"></form>
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-and">
+                Display every result that contains ALL the specified conditions
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-or">
+                Display every result that contains NONE of the selected
+                conditions
+              </div>
+              <div class="tabcontent d-none checkboxes" id="checkboxes-not">
+                Display every result that contains ANY of the selected
+                conditions
+              </div>
             </div>
           </div>
         </div>
@@ -46,12 +88,35 @@
         <div id="monthlyDistribution"></div>
         <div id="hourlyDistribution"></div>
       </div>
+    <div id="network" class="d-flex">
+        <div id="arcDiagram"></div>
+    </div>
+    <div id="crashIntensityFrequencies"> 
+      <div id='bubbleChart'></div>
+    </div>
+    <div>
+      <div id="footer">
+        <div id="footer-text">
+          <p>
+            This visualization was created by Alan Bird and Eric Sims for CS
+            6630: Data Visualization at the University of Utah.
+          </p>
+          <p>
+            The data used in this visualization was obtained from the 
+            <!-- Hyperlink text -->
+            <a href="https://dev.socrata.com/foundry/opendata.utah.gov/herb-zqda" target="_blank">Utah
+            Department of Transportation.</a>
+          </p>
+        </div>
+      </div>
     </div>
 
     <script src="js/filter.js"></script>
-    <script src="js/script.js"></script>
     <script src="js/googleMap.js"></script>
     <script src="js/hourlyDistribution.js"></script>
     <script src="js/monthlyDistribution.js"></script>
+    <script src="js/arcDiagram.js"></script>
+    <script src="js/bubbleChart.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
