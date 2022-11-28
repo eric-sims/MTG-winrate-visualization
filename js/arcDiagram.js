@@ -4,7 +4,7 @@ class arcDiagram {
     this.links = this.globalApplicationState.links;
   }
 
-  draw() {
+  async draw() {
     // set margins and dimensions
     let margin = { top: 30, right: 30, bottom: 200, left: 200 };
     let width = 800 - margin.left - margin.right; //document.getElementById('arcDiagram').clientWidth;
@@ -18,38 +18,6 @@ class arcDiagram {
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // // add title to the chart
-    // svg.append("text")
-    //     .attr("x", (width / 2))
-    //     .attr("y", 0 + (margin.top))
-    //     .attr("text-anchor", "middle")
-    //     .style("font-size", "16px")
-    //     .style("text-decoration", "underline")
-    //     .text("Crash Type Comparisons");
-
-    // list of categories
-    // var categories = [
-    //   "COMMERCIAL_MOTOR_VEH_INVOLVED",
-    //   "DISTRACTED_DRIVING",
-    //   "DOMESTIC_ANIMAL_RELATED",
-    //   "DROWSY_DRIVING",
-    //   "DUI",
-    //   "IMPROPER_RESTRAINT",
-    //   "INTERSECTION_RELATED",
-    //   "MOTORCYCLE_INVOLVED",
-    //   "NIGHT_DARK_CONDITION",
-    //   "OLDER_DRIVER_INVOLVED",
-    //   "OVERTURN_ROLLOVER",
-    //   "PEDESTRIAN_INVOLVED",
-    //   "ROADWAY_DEPARTURE",
-    //   "SINGLE_VEHICLE",
-    //   "TEENAGE_DRIVER_INVOLVED",
-    //   "UNRESTRAINED",
-    //   "WILD_ANIMAL_RELATED",
-    //   "WORK_ZONE_RELATED",
-    //   "BICYCLIST_INVOLVED",
-    // ];
 
     var categories = this.globalApplicationState.booleanDataNames;
 

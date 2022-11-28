@@ -50,8 +50,24 @@ body{
   width: 100%;
   /* background-color: aqua; */
   border: 0ch;
-  height: 1500px;
+  height: 800px;
   margin: 25px;
+}
+
+#bubbleChart {
+  width: 100%;
+  /* background-color: aqua; */
+  border: 0ch;
+  height: 500px;
+  margin: 25px;
+}
+
+/* Centered header */
+.header {
+  text-align: center;
+  background-color: #fab03b;
+  color: black;
+  padding: 10px;
 }
 
 .text-check-group{

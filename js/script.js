@@ -62,18 +62,23 @@ Promise.all([
 
   globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
   globalApplicationState.arcDiagram.draw();
+
+  globalApplicationState.bubbleChart = new bubbleChart(globalApplicationState);
+  globalApplicationState.bubbleChart.draw();
 });
 
 const globalApplicationState = {
-  map: null,
   data: null,
   filteredData: null,
+  links: null,
+  booleanDataNames: null,
+  map: null,
   hourlyDistribution: null,
   monthlyDistribution: null,
   filterSection: null,
   filterOptions: null,
   arcDiagram: null,
-  links: null,
+  bubbleChart: null,
 };
 
 function openTab(event, tabName) {

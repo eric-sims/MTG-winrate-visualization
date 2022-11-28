@@ -20,7 +20,7 @@
 
   <body>
     <div id="header-wrap">
-      <header>
+      <header class="header">
         <h1>Utah Car Accident Visualization</h1>
         <div>
           Name: Alan Bird, Eric Sims; E-Mail: u1247999@utah.edu; UID: u1247999
@@ -88,15 +88,35 @@
         <div id="monthlyDistribution"></div>
         <div id="hourlyDistribution"></div>
       </div>
-      <div id="network" class="d-flex">
+    <div id="network" class="d-flex">
         <div id="arcDiagram"></div>
+    </div>
+    <div id="crashIntensityFrequencies"> 
+      <div id='bubbleChart'></div>
+    </div>
+    <div>
+      <div id="footer">
+        <div id="footer-text">
+          <p>
+            This visualization was created by Alan Bird and Eric Sims for CS
+            6630: Data Visualization at the University of Utah.
+          </p>
+          <p>
+            The data used in this visualization was obtained from the 
+            <!-- Hyperlink text -->
+            <a href="https://dev.socrata.com/foundry/opendata.utah.gov/herb-zqda" target="_blank">Utah
+            Department of Transportation.</a>
+          </p>
+        </div>
+      </div>
     </div>
 
     <script src="js/filter.js"></script>
-    <script src="js/script.js"></script>
     <script src="js/googleMap.js"></script>
     <script src="js/hourlyDistribution.js"></script>
     <script src="js/monthlyDistribution.js"></script>
     <script src="js/arcDiagram.js"></script>
+    <script src="js/bubbleChart.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
