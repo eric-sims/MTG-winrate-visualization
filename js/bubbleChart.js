@@ -98,8 +98,8 @@ class bubbleChart {
             .domain([0, d3.max(categoryMap.values(), (d) => d.averageScore)])
             .interpolator(d3.interpolateReds);
 
-        const tooltip = d3
-            .select("#arcDiagram")
+        this.tooltip = d3
+            .select("#bubbleChart")
             .append("div")
             .style("opacity", 0)
             .attr("class", "tooltip")
@@ -110,32 +110,32 @@ class bubbleChart {
             .style("padding", "5px");
       
           // Three function that change the tooltip when user hover / move / leave a cell
-        const mouseover = function (event, d) {
-            tooltip.style("opacity", 1);
+        this.mouseover = function (event, d) {
+            that.tooltip.style("opacity", 1);
         };
           
-        const mousemove = function (event, d) {
-            tooltip
-                .html("Average Crash Severity: " + d.averageScore + "<br>" + "Frequency: " + d.frequency + "<br>" + "Category: " + d.category)
+        this.mousemove = function (event, d) {
+            that.tooltip
+                .html("<h5>" + that.globalApplicationState.booleanDataNames.find(obj => obj.type === d.category).name + "</h5>" + "Frequency: " + d.frequency + "<br>" + "Average Crash Severity: " + d.averageScore)
                 .style("left", event.pageX + 10 + "px")
                 .style("top", event.pageY + 10 + "px");
         };
-
-        const mouseleave = function (d) {
-            tooltip.style("opacity", 0);
+        
+        this.mouseleave = function (d) {
+            that.tooltip.style("opacity", 0);
         };
       
         // create a circle for each category
-        const circles = svg
+        this.circles = svg
             .selectAll("circle")
             .data(categoryMap.values())
             .join("circle")
             .attr("r", (d) => this.radiusScale(d.frequency))
             .style("fill", (d) => this.colorScale(d.averageScore))
             .style("opacity", 0.75)
-            .on("mouseover", mouseover)
-            .on("mousemove", mousemove)
-            .on("mouseout", mouseleave);
+            .on("mouseover", this.mouseover)
+            .on("mousemove", this.mousemove)
+            .on("mouseleave", this.mouseleave);
 
         this.simulation.stop();
         this.simulation = d3.forceSimulation().nodes([...categoryMap.values()])
@@ -145,12 +145,18 @@ class bubbleChart {
             .on('tick', ticked);
 
         function ticked () {
-            circles
+            that.circles
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
         }
 
 
-
+        // add a button that says "Show Insights"
+        this.button = d3.select("#bubbleChart")
+            .append("button")
+            .text("Show Insights")
+            .on("click", function () {
+                // create a div to show text about the 
+            });
     }
 }
