@@ -92,11 +92,11 @@ class bubbleChart {
             .domain([0, d3.max(categoryMap.values(), (d) => d.frequency)])
             .range([10, 50]);
 
-        // create a scale for the color of the circles
-        let colorScale = d3
+        // interpolate reds
+        this.colorScale = d3
             .scaleSequential()
             .domain([0, d3.max(categoryMap.values(), (d) => d.averageScore)])
-            .interpolator(d3.interpolateBlues);
+            .interpolator(d3.interpolateReds);
 
         const tooltip = d3
             .select("#arcDiagram")
@@ -131,14 +131,13 @@ class bubbleChart {
             .data(categoryMap.values())
             .join("circle")
             .attr("r", (d) => this.radiusScale(d.frequency))
-            .style("fill", (d) => colorScale(d.averageScore))
+            .style("fill", (d) => this.colorScale(d.averageScore))
             .style("opacity", 0.75)
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseout", mouseleave);
 
         this.simulation.stop();
-        console.log();
         this.simulation = d3.forceSimulation().nodes([...categoryMap.values()])
             .force("x", d3.forceX(d => that.xScale(d.averageScore)).strength(1))
             .force("y", d3.forceY(height / 2).strength(0.05))
