@@ -87,3 +87,10 @@ function openTab(event, tabName) {
   d3.selectAll(".tablinks").classed("active", false);
   d3.select("#" + tabName + "-button").classed("active", true);
 }
+
+function openMainTab(event, tabName) {
+  d3.selectAll(".main-tab-content").classed("d-none", true);
+  d3.select("#" + tabName).classed("d-none", false);
+  d3.selectAll(".tablinks").classed("active", false);
+  d3.select("#" + tabName + "-button").classed("active", true);
+}

@@ -23,11 +23,36 @@
       <header class="header">
         <h1>Utah Car Accident Visualization</h1>
         <div>
-          Name: Alan Bird, Eric Sims; E-Mail: u1247999@utah.edu; UID: u1247999
+          Names: Eric Sims, Alan Bird<br />
+          E-Mails: u1247999@utah.edu, u1136767@utah.edu<br />
+          UIDs: u1247999, u1136767
         </div>
       </header>
+      <div class="tab">
+        <button
+          class="tablinks active"
+          id="visualization-button"
+          onclick="openMainTab(event, 'visualization')"
+        >
+          Map/Bar Graphs
+        </button>
+        <button
+          class="tablinks"
+          id="secondary-visualization-button"
+          onclick="openMainTab(event, 'secondary-visualization')"
+        >
+          Frequency/Association Charts
+        </button>
+        <button
+          class="tablinks"
+          id="processBook-button"
+          onclick="openMainTab(event, 'processBook')"
+        >
+          Process Book
+        </button>
+      </div>
     </div>
-    <div id="visualization">
+    <div id="visualization" class="main-tab-content">
       <div id="map-filter" class="d-flex">
         <div id="map"></div>
         <div id="filter-container">
@@ -88,11 +113,14 @@
         <div id="monthlyDistribution"></div>
         <div id="hourlyDistribution"></div>
       </div>
-    <div id="network" class="d-flex">
-        <div id="arcDiagram"></div>
     </div>
-    <div id="crashIntensityFrequencies"> 
-      <div id='bubbleChart'></div>
+    <div id="secondary-visualization" class="d-none main-tab-content">
+      <div id="network" class="d-flex">
+        <div id="arcDiagram"></div>
+      </div>
+      <div id="crashIntensityFrequencies">
+        <div id="bubbleChart"></div>
+      </div>
     </div>
     <div>
       <div id="footer">
@@ -102,10 +130,13 @@
             6630: Data Visualization at the University of Utah.
           </p>
           <p>
-            The data used in this visualization was obtained from the 
+            The data used in this visualization was obtained from the
             <!-- Hyperlink text -->
-            <a href="https://dev.socrata.com/foundry/opendata.utah.gov/herb-zqda" target="_blank">Utah
-            Department of Transportation.</a>
+            <a
+              href="https://dev.socrata.com/foundry/opendata.utah.gov/herb-zqda"
+              target="_blank"
+              >Utah Department of Transportation.</a
+            >
           </p>
         </div>
       </div>
