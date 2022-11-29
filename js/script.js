@@ -60,8 +60,12 @@ Promise.all([
   );
   globalApplicationState.hourlyDistribution.draw();
 
-  globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
-  globalApplicationState.arcDiagram.draw();
+  globalApplicationState.heatMap = new heatMap(globalApplicationState);
+  globalApplicationState.heatMap.draw();
+  globalApplicationState.attributeNetwork = new attributeNetwork(
+    globalApplicationState
+  );
+  globalApplicationState.attributeNetwork.draw();
 
   globalApplicationState.bubbleChart = new bubbleChart(globalApplicationState);
   globalApplicationState.bubbleChart.draw();

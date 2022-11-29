@@ -1,4 +1,4 @@
-class arcDiagram {
+class heatMap {
   constructor(globalApplicationState) {
     this.globalApplicationState = globalApplicationState;
     this.links = this.globalApplicationState.links;
@@ -12,7 +12,7 @@ class arcDiagram {
 
     // create svg
     let svg = d3
-      .select("#arcDiagram")
+      .select("#heatMap")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -52,7 +52,7 @@ class arcDiagram {
       .domain([0, d3.max(this.links, (d) => d.value)]);
 
     const tooltip = d3
-      .select("#arcDiagram")
+      .select("#heatMap")
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
