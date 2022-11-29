@@ -4,10 +4,12 @@ class bubbleChart {
     }
 
     async draw() {
+        const that = this;
         // get width and height of div
-        let width = document.getElementById("bubbleChart").clientWidth;
-        let height = document.getElementById("bubbleChart").clientHeight;
+        let width = 1000;
+        let height = 500;
         let margin = { top: 10, right: 30, bottom: 60, left: 30 };
+        this.simulation = d3.forceSimulation();
 
         // create svg
         let svg = d3
@@ -37,8 +39,8 @@ class bubbleChart {
                 totalScore: 0,
                 averageScore: 0,
                 category: categories[i],
-                x: 0,
-                y: 0,
+                x: 110,
+                y: 110,
             });
         }
         // console.log("BEFORE category map", categoryMap);
@@ -64,16 +66,17 @@ class bubbleChart {
         // console.log("AFTER category map", categoryMap);
 
         // create an axis scale from 1 to 5
-        let axisScale = d3
+        this.xScale = d3
             .scaleLinear()
             .domain([1, 3])
             .range([margin.left, width - margin.right]);
 
         // create an axis
-        let axis = d3.axisBottom(axisScale).ticks(5);
+        this.axis = d3.axisBottom(this.xScale).ticks(5);
+        
         svg.append("g")
             .attr("transform", `translate(0, ${height - margin.bottom})`)
-            .call(axis);
+            .call(this.axis);
 
         // add axis label
         svg.append("text")
@@ -84,16 +87,16 @@ class bubbleChart {
             .text("Average Crash Severity");
 
         // create a scale for the radius of the circles
-        let radiusScale = d3
+        this.radiusScale = d3
             .scaleLinear()
             .domain([0, d3.max(categoryMap.values(), (d) => d.frequency)])
             .range([10, 50]);
 
-        // create a scale for the color of the circles
-        let colorScale = d3
+        // interpolate reds
+        this.colorScale = d3
             .scaleSequential()
             .domain([0, d3.max(categoryMap.values(), (d) => d.averageScore)])
-            .interpolator(d3.interpolateBlues);
+            .interpolator(d3.interpolateReds);
 
         const tooltip = d3
             .select("#arcDiagram")
@@ -107,64 +110,46 @@ class bubbleChart {
             .style("padding", "5px");
       
           // Three function that change the tooltip when user hover / move / leave a cell
-          const mouseover = function (event, d) {
+        const mouseover = function (event, d) {
             tooltip.style("opacity", 1);
-          };
+        };
           
-          const mousemove = function (event, d) {
+        const mousemove = function (event, d) {
             tooltip
                 .html("Average Crash Severity: " + d.averageScore + "<br>" + "Frequency: " + d.frequency + "<br>" + "Category: " + d.category)
                 .style("left", event.pageX + 10 + "px")
                 .style("top", event.pageY + 10 + "px");
-            };
+        };
 
-          const mouseleave = function (d) {
+        const mouseleave = function (d) {
             tooltip.style("opacity", 0);
-          };
+        };
       
         // create a circle for each category
-        let circles = svg
+        const circles = svg
             .selectAll("circle")
             .data(categoryMap.values())
-            .enter()
-            .append("circle")
-            .attr("cx", (d) => axisScale(d.averageScore))
-            .attr("cy", height / 2)
-            .attr("r", (d) => radiusScale(d.frequency))
-            .style("fill", (d) => colorScale(d.averageScore))
+            .join("circle")
+            .attr("r", (d) => this.radiusScale(d.frequency))
+            .style("fill", (d) => this.colorScale(d.averageScore))
             .style("opacity", 0.75)
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
-            .on("mouseleave", mouseleave);
+            .on("mouseout", mouseleave);
 
-        // create a label for each circle
-        // let labels = svg
-        //     .selectAll("text")
-        //     .data(categoryMap.values())
-        //     .enter()
-        //     .append("text")
-        //     .attr("x", (d) => axisScale(d.averageScore))
-        //     .attr("y", height / 2)
-        //     .text((d) => d.type)
-        //     .style("text-anchor", "middle")
-        //     .style("font-size", "12px")
-        //     .style("fill", "black");
+        this.simulation.stop();
+        this.simulation = d3.forceSimulation().nodes([...categoryMap.values()])
+            .force("x", d3.forceX(d => that.xScale(d.averageScore)).strength(1))
+            .force("y", d3.forceY(height / 2).strength(0.05))
+            .force("collision", d3.forceCollide().radius(d => that.radiusScale(d.frequency)))
+            .on('tick', ticked);
 
-        // // create a force simulation d3 v7
-        // let simulation = d3
-        //     .forceSimulation(categoryMap.values())
-        //     .force("x", d3.forceX((d) => axisScale(d.averageScore)).strength(1))
-        //     .force("y", d3.forceY(height / 2).strength(0.05))
-        //     .force("collision", d3.forceCollide().radius((d) => radiusScale(d.frequency) + 5))
-        //     .on("tick", () => {
-        //         circles
-        //             .attr("cx", (d) => d.x)
-        //             .attr("cy", (d) => d.y);
-        //         // labels
-        //         //     .attr("x", (d) => d.x)
-        //         //     .attr("y", (d) => d.y);
-        //     }
-        // );
+        function ticked () {
+            circles
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+        }
+
 
 
     }
