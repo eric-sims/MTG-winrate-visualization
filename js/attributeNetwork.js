@@ -5,6 +5,8 @@ class attributeNetwork {
   }
 
   async draw() {
+    this.simulation = d3.forceSimulation();
+
     this.categories = this.globalApplicationState.booleanDataNames;
     this.selectedAttribute = this.categories[0].type;
 
@@ -36,14 +38,37 @@ class attributeNetwork {
       .append("svg")
       .classed("attribute-network-svg", true);
 
-    svg
-      .selectAll("circle")
-      .data(this.categories)
-      .join("circle")
+    this.colors = d3
+      .scaleLinear()
+      .domain(d3.ticks(0, 50, 11))
+      .range([
+        "#5E4FA2",
+        "#3288BD",
+        "#66C2A5",
+        "#ABDDA4",
+        "#E6F598",
+        "#FFFFBF",
+        "#FEE08B",
+        "#FDAE61",
+        "#F46D43",
+        "#D53E4F",
+        "#9E0142",
+      ]);
+
+    const groups = svg.selectAll("g").data(this.categories).join("g");
+    groups
+      .append("circle")
       .attr("cx", (d) => d.value * 100)
       .attr("cy", 100)
       .attr("r", 20)
-      .style("fill", "green");
+      .style("fill", (d, i) => this.colors(i));
+    groups
+      .append("image")
+      .attr("xlink:href", "assets/CarSvg3.svg")
+      .attr("x", (d) => d.value * 100)
+      .attr("y", 100)
+      .attr("height", 40)
+      .attr("width", 40);
     this.arrangeCars();
   }
 
@@ -84,6 +109,7 @@ class attributeNetwork {
   }
 
   arrangeCars() {
+    const that = this;
     let values = this.links.filter(
       (item) =>
         item.source === this.selectedAttribute ||
@@ -91,37 +117,69 @@ class attributeNetwork {
     );
     console.log(this.categories);
 
+    this.xScale = d3
+      .scaleLinear()
+      .domain([(this.localMax / this.valueMax) * 100, 0])
+      .range([20, 780]);
+
+    this.simulation.stop();
+    this.simulation = d3
+      .forceSimulation()
+      .nodes([...this.categories])
+      .force("x", d3.forceX((d) => 20 + 755 * (1 - d.value)).strength(1.5))
+      .force("y", d3.forceY(300 / 2).strength(0.1))
+      .force("collision", d3.forceCollide().radius(20))
+      .on("tick", ticked);
+
+    function ticked() {
+      that.circles.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+      that.cars.attr("x", (d) => d.x - 19).attr("y", (d) => d.y - 15);
+    }
+
     d3.select("#attributeNetwork")
       .select("svg")
-      .selectAll("circle")
+      .selectAll("g")
       .data(this.categories)
       .join(
         (join) => {
           join
-            .attr("cx", (d) => 100 - d.value * 100 + "%")
+            .select("circle")
+            .attr("cx", (d) => 20 + 755 * (1 - d.value)) //value 795 width 20 padding 20+ 840*(1-value)
             .attr("cy", 100)
             .attr("r", 20)
-            .style("fill", "green");
+            .style("fill", (d, i) => this.colors(i));
+          join
+            .select("image")
+            .transition()
+            .duration(1000)
+            .attr("x", (d) => 20 + 755 * (1 - d.value) - 19);
         },
         (update) => {
           update
+            .select("circle")
             .attr("cy", 100)
             .attr("r", 20)
-            .style("fill", "green")
+            .style("fill", (d, i) => this.colors(i))
             .transition()
             .duration(1000)
-            .attr("cx", (d) => 100 - d.value * 100 + "%");
+            .attr("cx", (d) => 20 + 755 * (1 - d.value));
+          update
+            .select("image")
+            .transition()
+            .duration(1000)
+            .attr("x", (d) => 20 + 755 * (1 - d.value) - 19);
         },
         (exit) => exit.remove()
       );
 
-    this.xScale = d3
-      .scaleLinear()
-      .domain([(this.localMax / this.valueMax) * 100, 0])
-      .range([10, 800]);
+    this.circles = d3
+      .select("#attributeNetwork")
+      .select("svg")
+      .selectAll("circle");
+    this.cars = d3.select("#attributeNetwork").select("svg").selectAll("image");
 
     // create an axis
-    this.axis = d3.axisBottom(this.xScale).ticks(5);
+    this.axis = d3.axisBottom(this.xScale);
     d3.select("#attribute-axis-label").remove();
     d3.select("#attribute-axis").remove();
 
@@ -129,7 +187,7 @@ class attributeNetwork {
       .select("svg")
       .append("g")
       .attr("id", "attribute-axis")
-      .attr("transform", `translate(0, 200)`)
+      .attr("transform", `translate(0, 300)`)
       .call(this.axis);
 
     // add axis label
@@ -138,7 +196,7 @@ class attributeNetwork {
       .append("text")
       .attr("id", "attribute-axis-label")
       .attr("x", 800 / 2)
-      .attr("y", 250 - 5)
+      .attr("y", 350 - 5)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
       .text("Percentage Correlation to Selected Attribute");
