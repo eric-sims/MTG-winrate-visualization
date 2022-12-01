@@ -132,8 +132,36 @@ class attributeNetwork {
       .on("tick", ticked);
 
     function ticked() {
-      that.circles.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      that.cars.attr("x", (d) => d.x - 19).attr("y", (d) => d.y - 15);
+      that.circles
+        .transition()
+        .duration(45)
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => {
+          if (d.type === that.selectedAttribute) {
+            return 25;
+          } else {
+            return d.y;
+          }
+        })
+        .attr("stroke-width", 5)
+        .attr("stroke", (d) => {
+          if (d.type === that.selectedAttribute) {
+            return "gold";
+          } else {
+            return "none";
+          }
+        });
+      that.cars
+        .transition()
+        .duration(45)
+        .attr("x", (d) => d.x - 19)
+        .attr("y", (d) => {
+          if (d.type === that.selectedAttribute) {
+            return 10;
+          } else {
+            return d.y - 15;
+          }
+        });
     }
 
     d3.select("#attributeNetwork")
@@ -145,7 +173,6 @@ class attributeNetwork {
           join
             .select("circle")
             .attr("cx", (d) => 20 + 755 * (1 - d.value)) //value 795 width 20 padding 20+ 840*(1-value)
-            .attr("cy", 100)
             .attr("r", 20)
             .style("fill", (d, i) => this.colors(i));
           join
@@ -157,9 +184,7 @@ class attributeNetwork {
         (update) => {
           update
             .select("circle")
-            .attr("cy", 100)
             .attr("r", 20)
-            .style("fill", (d, i) => this.colors(i))
             .transition()
             .duration(1000)
             .attr("cx", (d) => 20 + 755 * (1 - d.value));

@@ -50,7 +50,7 @@ body{
   width: 860px;
   /* background-color: aqua; */
   border: 0ch;
-  height: 800px;
+  height: min-content;
   margin: 25px;
 }
 .attribute-network-svg{
