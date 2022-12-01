@@ -12,7 +12,7 @@ class bubbleChart {
         this.simulation = d3.forceSimulation();
 
         // create svg
-        let svg = d3
+        this.svg = d3
             .select("#bubbleChart")
             .append("svg")
             .attr("width", width)
@@ -21,7 +21,7 @@ class bubbleChart {
             .attr("transform", "translate(0,0)");
 
         // add title to the chart
-        svg.append("text")
+        this.svg.append("text")
             .attr("x", width / 2)
             .attr("y", 0 + 20)
             .attr("text-anchor", "middle")
@@ -65,6 +65,7 @@ class bubbleChart {
 
         // console.log("AFTER category map", categoryMap);
 
+
         // create an axis scale from 1 to 5
         this.xScale = d3
             .scaleLinear()
@@ -74,12 +75,12 @@ class bubbleChart {
         // create an axis
         this.axis = d3.axisBottom(this.xScale).ticks(5);
         
-        svg.append("g")
+        this.svg.append("g")
             .attr("transform", `translate(0, ${height - margin.bottom})`)
             .call(this.axis);
 
         // add axis label
-        svg.append("text")
+        this.svg.append("text")
             .attr("x", width / 2)
             .attr("y", height - 5)
             .attr("text-anchor", "middle")
@@ -116,7 +117,7 @@ class bubbleChart {
           
         this.mousemove = function (event, d) {
             that.tooltip
-                .html("<h5>" + that.globalApplicationState.booleanDataNames.find(obj => obj.type === d.category).name + "</h5>" + "Frequency: " + d.frequency + "<br>" + "Average Crash Severity: " + d.averageScore)
+                .html("<h5>" + that.globalApplicationState.booleanDataNames.find(obj => obj.type === d.category).name + "</h5>" + "Frequency: " + d.frequency + "<br>" + "Average Crash Severity: " + d.averageScore.toFixed(3))
                 .style("left", event.pageX + 10 + "px")
                 .style("top", event.pageY + 10 + "px");
         };
@@ -126,7 +127,7 @@ class bubbleChart {
         };
       
         // create a circle for each category
-        this.circles = svg
+        this.circles = this.svg
             .selectAll("circle")
             .data(categoryMap.values())
             .join("circle")
@@ -150,13 +151,57 @@ class bubbleChart {
                 .attr("cy", d => d.y);
         }
 
-
+        this.toggle = false;
         // add a button that says "Show Insights"
         this.button = d3.select("#bubbleChart")
             .append("button")
             .text("Show Insights")
             .on("click", function () {
-                // create a div to show text about the 
+                that.toggle = !that.toggle;
+
+                // grey out the svg
+                that.svg.selectAll('circle').style("opacity", that.toggle ? 0.5 : 1.0);
+
+                if (that.toggle) {
+                    // append div over svg
+                    that.svg.append("foreignObject")
+                        .attr("x", 0)
+                        .attr("y", 0)
+                        .attr("width", width + 200)
+                        .attr("height", height);
+
+                    // create textbox above pedestrian invovled circle
+                    that.svg.append("foreignObject")
+                        .attr("x", that.xScale(categoryMap.get("PEDESTRIAN_INVOLVED").averageScore) - 200)
+                        .attr("y", 10)
+                        .attr("width", width)
+                        .attr("height", height)
+                        .append("xhtml:div")
+                        .attr("class", "textbox")
+                        .attr('id', 'pedestrian')
+                        .html("The average crash severity is <br> higher for crashes involving pedestrians <br> but is not as frequent<br> as intersection accidents.");
+
+                    // draw a line from the text to the pedestrian circle
+                    that.svg.append("line")
+                        .attr("x1", that.xScale(categoryMap.get("PEDESTRIAN_INVOLVED").averageScore))
+                        .attr("y1", 75)
+                        .attr("x2", that.xScale(categoryMap.get("PEDESTRIAN_INVOLVED").averageScore))
+                        .attr("y2", 200)
+                        .attr("stroke-width", 2)
+                        .attr("stroke", "black")
+                        .attr("marker-end", "url(#arrow)")
+                        .attr("id", "pedestrianLine");
+
+                } else {
+                    // remove the text
+                    d3.select("#floatingTextBC").remove();
+                    d3.select("#pedestrian").remove();
+                    d3.select("#pedestrianLine").remove();
+                }
+
+                
+
+                
             });
     }
 }
