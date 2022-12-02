@@ -117,7 +117,9 @@ class bubbleChart {
           
         this.mousemove = function (event, d) {
             that.tooltip
-                .html("<h5>" + that.globalApplicationState.booleanDataNames.find(obj => obj.type === d.category).name + "</h5>" + "Frequency: " + d.frequency + "<br>" + "Average Crash Severity: " + d.averageScore.toFixed(3))
+                .html("<h5>" + that.globalApplicationState.booleanDataNames.find(obj => obj.type === d.category).name 
+                + "</h5>" + "Frequency: " + d.frequency + "<br>" 
+                + "Average Crash Severity: " + d.averageScore.toFixed(3))
                 .style("left", event.pageX + 10 + "px")
                 .style("top", event.pageY + 10 + "px");
         };

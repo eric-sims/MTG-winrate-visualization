@@ -11,7 +11,7 @@ class attributeNetwork {
     this.selectedAttribute = this.categories[0].type;
 
     this.mapCategoryToData();
-    console.log(this.categories);
+    // console.log(this.categories);
 
     const selectorGroup = d3.select("#attributeNetwork").append("g");
     selectorGroup.append("text").text("Attribute:");
@@ -69,7 +69,44 @@ class attributeNetwork {
       .attr("y", 100)
       .attr("height", 40)
       .attr("width", 40);
+    
     this.arrangeCars();
+
+    this.tooltip = d3
+            .select("#attributeNetwork")
+            .append("div")
+            .style("opacity", 0)
+            .attr("class", "tooltip")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "2px")
+            .style("border-radius", "5px")
+            .style("padding", "5px");
+    const that = this;
+    // Three function that change the tooltip when user hover / move / leave a cell
+    this.mouseover = function (event, d) {
+      // console.log('mouseover')
+      that.tooltip.style("opacity", 1);
+    };
+    
+    this.mousemove = function (event, d) {
+      console.log("d", d);
+        that.tooltip
+          .html(d.name + "<br>" +  d.value.toFixed(3) + "% similarity")
+            .style("left", event.pageX + 10 + "px")
+            .style("top", event.pageY + 10 + "px");
+    };
+  
+    this.mouseleave = function (d) {
+      // console.log("mouseleave");
+        that.tooltip.style("opacity", 0);
+    };
+
+    d3.selectAll("image")
+      .on("mouseover", this.mouseover)
+      .on("mousemove", this.mousemove)
+      .on("mouseleave", this.mouseleave);
+
   }
 
   mapCategoryToData() {
