@@ -82,7 +82,7 @@ class filter {
 
     severitGroup.append("br");
     severitGroup.append("text").text("Maximum Severity ");
-    
+
     const maxSev = severitGroup
       .append("select")
       .attr("id", "max-sev")
@@ -92,7 +92,9 @@ class filter {
       .data([1, 2, 3, 4, 5])
       .join("option")
       .text((d) => d)
-      .attr("type", (d) => d);
+      .attr("type", (d) => d)
+      // default to max
+      .attr("selected", (d) => (d === 5 ? "selected" : null));
 
     severitGroup.append("br");
 
@@ -104,6 +106,7 @@ class filter {
     const updateMaxSlider = (d) => {
       this.globalApplicationState.filterOptions.severityMax =
         d.srcElement.value;
+        console.log("yo", d.srcElement.value)
       this.updateFilteredData();
     };
 
