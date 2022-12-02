@@ -67,23 +67,33 @@ class filter {
     //Add Severity Sliders
     //TODO need to add scale for these
     const severitGroup = d3.select("#advanced").append("g");
-    severitGroup.append("text").text("Minimum Severity");
-    severitGroup
-      .append("input")
-      .attr("type", "range")
-      .attr("min", 1)
-      .attr("max", 5)
-      .attr("value", 0)
+    severitGroup.append("text").text("Minimum Severity ");
+
+    const minSev = severitGroup
+      .append("select")
+      .attr("id", "min-sev")
       .on("change", (d) => updateMinSlider(d));
+    minSev
+      .selectAll("option")
+      .data([1, 2, 3, 4, 5])
+      .join("option")
+      .text((d) => d)
+      .attr("type", (d) => d);
+
     severitGroup.append("br");
-    severitGroup.append("text").text("Maximum Severity");
-    severitGroup
-      .append("input")
-      .attr("type", "range")
-      .attr("min", 1)
-      .attr("max", 5)
-      .attr("value", 5)
+    severitGroup.append("text").text("Maximum Severity ");
+    
+    const maxSev = severitGroup
+      .append("select")
+      .attr("id", "max-sev")
       .on("change", (d) => updateMaxSlider(d));
+    maxSev
+      .selectAll("option")
+      .data([1, 2, 3, 4, 5])
+      .join("option")
+      .text((d) => d)
+      .attr("type", (d) => d);
+
     severitGroup.append("br");
 
     const updateMinSlider = (d) => {
@@ -96,6 +106,8 @@ class filter {
         d.srcElement.value;
       this.updateFilteredData();
     };
+
+
 
     const years = [2016, 2017, 2018, 2019];
 
