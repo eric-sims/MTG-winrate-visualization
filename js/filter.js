@@ -65,6 +65,7 @@ class filter {
     };
 
     //Add Severity Sliders
+    //TODO need to add scale for these
     const severitGroup = d3.select("#advanced").append("g");
     severitGroup.append("text").text("Minimum Severity");
     severitGroup
@@ -120,6 +121,35 @@ class filter {
       this.updateFilteredData();
     };
 
+    const limitGroup = d3
+      .select("#advanced")
+      .append("g")
+      .attr("id", "limitgroup");
+    limitGroup.append("text").text("Map limit:");
+    limitGroup
+      .append("input")
+      .attr("type", "number")
+      .attr("value", 1500)
+      .on("change", (d) => updateLimit(d));
+    limitGroup.append("br");
+
+    const updateLimit = (d) => {
+      this.globalApplicationState.dataLimit = d.srcElement.value;
+      this.updateDisclaimerText();
+    };
+    limitGroup.append("text").attr("id", "limitDisclaimer");
+    limitGroup.append("br");
+    limitGroup
+      .append("text")
+      .text(
+        "WARNING: displaying this many results can cause serious lag when zooming or navigating the map," +
+          " we reccomend filtering the data you are interested in or reducing the limit"
+      )
+      .attr("id", "limitWarning")
+      .classed("d-none", true);
+    this.globalApplicationState.dataLimit = 5000;
+    this.updateDisclaimerText();
+
     //Add checkboxes to correct sections
     const checkGroups = d3
       .selectAll(".checkboxes")
@@ -161,6 +191,24 @@ class filter {
 
     checkGroups.append("text").text((d) => d.name);
     checkGroups.filter((d, i) => i % 2).append("br");
+  }
+
+  updateDisclaimerText() {
+    let limit = this.globalApplicationState.dataLimit;
+    let results = this.globalApplicationState.filteredData.length;
+    if (limit > results) {
+      limit = results;
+    }
+    let text =
+      "Currently showing " + limit + " of " + results + " results on the map.";
+    d3.select("#limitDisclaimer").text(text);
+
+    if (limit > 8000) {
+      d3.select("#limitWarning").classed("d-none", false);
+    } else {
+      d3.select("#limitWarning").classed("d-none", true);
+    }
+    this.globalApplicationState.map?.updateCircles();
   }
 
   updateFilteredData() {
@@ -242,11 +290,11 @@ class filter {
         }
         return toReturn;
       });
-    this.updatVisualizations();
+    this.updateDisclaimerText();
+    this.updatBarGraphs();
   }
 
-  updatVisualizations() {
-    this.globalApplicationState.map.updateCircles();
+  updatBarGraphs() {
     this.globalApplicationState.hourlyDistribution.draw();
     this.globalApplicationState.monthlyDistribution.draw();
   }

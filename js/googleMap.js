@@ -91,7 +91,12 @@ class googleMap {
   }
 
   async updateCircles() {
-    let data = this.globalApplicationState.filteredData.slice(0, 1000);
+    let start = 0; //TODO this is where we will allow the user to select a diferent part of the data
+    let limit = this.globalApplicationState.dataLimit;
+    let data = this.globalApplicationState.filteredData.slice(
+      start,
+      start + limit
+    );
 
     // // add a google maps marker for every data point
     // const markers = data.map((d) => {
