@@ -47,6 +47,11 @@ Promise.all([
   globalApplicationState.links = data[1]["data"];
   this.filter = new filter(globalApplicationState);
 
+  globalApplicationState.links.map((link) => {
+    link.sourceName = globalApplicationState.booleanDataNames.find(d => d.type == link.source).name;
+    link.targetName = globalApplicationState.booleanDataNames.find(d => d.type == link.target).name;
+  });
+
   globalApplicationState.map = new googleMap(globalApplicationState);
   globalApplicationState.map.draw();
 
@@ -60,8 +65,12 @@ Promise.all([
   );
   globalApplicationState.hourlyDistribution.draw();
 
-  globalApplicationState.arcDiagram = new arcDiagram(globalApplicationState);
-  globalApplicationState.arcDiagram.draw();
+  globalApplicationState.heatMap = new heatMap(globalApplicationState);
+  globalApplicationState.heatMap.draw();
+  globalApplicationState.attributeNetwork = new attributeNetwork(
+    globalApplicationState
+  );
+  globalApplicationState.attributeNetwork.draw();
 
   globalApplicationState.bubbleChart = new bubbleChart(globalApplicationState);
   globalApplicationState.bubbleChart.draw();
@@ -83,6 +92,13 @@ const globalApplicationState = {
 
 function openTab(event, tabName) {
   d3.selectAll(".tabcontent").classed("d-none", true);
+  d3.select("#" + tabName).classed("d-none", false);
+  d3.selectAll(".tablinks").classed("active", false);
+  d3.select("#" + tabName + "-button").classed("active", true);
+}
+
+function openMainTab(event, tabName) {
+  d3.selectAll(".main-tab-content").classed("d-none", true);
   d3.select("#" + tabName).classed("d-none", false);
   d3.selectAll(".tablinks").classed("active", false);
   d3.select("#" + tabName + "-button").classed("active", true);

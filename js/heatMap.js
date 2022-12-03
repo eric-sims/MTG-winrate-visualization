@@ -1,4 +1,4 @@
-class arcDiagram {
+class heatMap {
   constructor(globalApplicationState) {
     this.globalApplicationState = globalApplicationState;
     this.links = this.globalApplicationState.links;
@@ -12,7 +12,7 @@ class arcDiagram {
 
     // create svg
     let svg = d3
-      .select("#arcDiagram")
+      .select("#heatMap")
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -25,7 +25,7 @@ class arcDiagram {
     const x = d3
       .scaleBand()
       .range([0, width])
-      .domain(categories.map((d) => d.type))
+      .domain(categories.map((d) => d.name))
       .padding(0.01);
     svg
       .append("g")
@@ -33,15 +33,16 @@ class arcDiagram {
       .call(d3.axisBottom(x))
       .selectAll("text")
       .attr("transform", "translate(-10,0)rotate(-45)")
+      .attr("font-size", "13px")
       .style("text-anchor", "end");
 
     // Build Y scales and axis
     const y = d3
       .scaleBand()
       .range([height, 0])
-      .domain(categories.map((d) => d.type))
+      .domain(categories.map((d) => d.name))
       .padding(0.01);
-    svg.append("g").call(d3.axisLeft(y));
+    svg.append("g").call(d3.axisLeft(y)).attr('font-size', '13px');
 
     // Build color scale
     const myColor = d3
@@ -52,7 +53,7 @@ class arcDiagram {
       .domain([0, d3.max(this.links, (d) => d.value)]);
 
     const tooltip = d3
-      .select("#arcDiagram")
+      .select("#heatMap")
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
@@ -71,9 +72,9 @@ class arcDiagram {
       tooltip
         .html(
           "Trait 1: " +
-            d.source +
+            d.sourceName +
             "<br>Trait 2: " +
-            d.target +
+            d.targetName +
             "<br>Frequency: " +
             d.value
         )
@@ -88,14 +89,14 @@ class arcDiagram {
     svg
       .selectAll()
       .data(this.links, function (d) {
-        return d.source + ":" + d.target;
+        return d.sourceName + ":" + d.targetName;
       })
       .join("rect")
       .attr("x", function (d) {
-        return x(d.source);
+        return x(d.sourceName);
       })
       .attr("y", function (d) {
-        return y(d.target);
+        return y(d.targetName);
       })
       .attr("width", x.bandwidth())
       .attr("height", y.bandwidth())
@@ -109,14 +110,14 @@ class arcDiagram {
     svg
       .selectAll()
       .data(this.links, function (d) {
-        return d.target + ":" + d.source;
+        return d.targetName + ":" + d.sourceName;
       })
       .join("rect")
       .attr("x", function (d) {
-        return x(d.target);
+        return x(d.targetName);
       })
       .attr("y", function (d) {
-        return y(d.source);
+        return y(d.sourceName);
       })
       .attr("width", x.bandwidth())
       .attr("height", y.bandwidth())

@@ -15,7 +15,10 @@ class filter {
       severityMin: 1,
       severityMax: 5,
       selectedCounty: "ANY",
+      startRange: 0,
     };
+
+    this.globalApplicationState.dataLimit = 5000;
 
     const booleanDataNames = [
       { type: "BICYCLIST_INVOLVED", name: "Bicyclist Involved" },
@@ -65,24 +68,37 @@ class filter {
     };
 
     //Add Severity Sliders
+    //TODO need to add scale for these
     const severitGroup = d3.select("#advanced").append("g");
-    severitGroup.append("text").text("Minimum Severity");
-    severitGroup
-      .append("input")
-      .attr("type", "range")
-      .attr("min", 1)
-      .attr("max", 5)
-      .attr("value", 0)
+    severitGroup.append("text").text("Minimum Severity ");
+
+    const minSev = severitGroup
+      .append("select")
+      .attr("id", "min-sev")
       .on("change", (d) => updateMinSlider(d));
+    minSev
+      .selectAll("option")
+      .data([1, 2, 3, 4, 5])
+      .join("option")
+      .text((d) => d)
+      .attr("type", (d) => d);
+
     severitGroup.append("br");
-    severitGroup.append("text").text("Maximum Severity");
-    severitGroup
-      .append("input")
-      .attr("type", "range")
-      .attr("min", 1)
-      .attr("max", 5)
-      .attr("value", 5)
+    severitGroup.append("text").text("Maximum Severity ");
+
+    const maxSev = severitGroup
+      .append("select")
+      .attr("id", "max-sev")
       .on("change", (d) => updateMaxSlider(d));
+    maxSev
+      .selectAll("option")
+      .data([1, 2, 3, 4, 5])
+      .join("option")
+      .text((d) => d)
+      .attr("type", (d) => d)
+      // default to max
+      .attr("selected", (d) => (d === 5 ? "selected" : null));
+
     severitGroup.append("br");
 
     const updateMinSlider = (d) => {
@@ -117,6 +133,66 @@ class filter {
     const updateYear = (radioEvent) => {
       this.globalApplicationState.filterOptions.includeYear =
         radioEvent.srcElement.value;
+      this.updateFilteredData();
+    };
+
+    const limitGroup = d3
+      .select("#advanced")
+      .append("g")
+      .attr("id", "limitgroup");
+    limitGroup.append("text").text("Map limit:");
+    limitGroup
+      .append("input")
+      .attr("type", "number")
+      .attr("value", this.globalApplicationState.dataLimit)
+      .on("change", (d) => updateLimit(d));
+    limitGroup.append("br");
+
+    const updateLimit = (d) => {
+      this.globalApplicationState.dataLimit = d.srcElement.value;
+      this.updateDisclaimerText();
+    };
+    limitGroup.append("text").attr("id", "limitDisclaimer");
+    limitGroup.append("br");
+    limitGroup
+      .append("text")
+      .text(
+        "WARNING: displaying this many results can cause serious lag when zooming or navigating the map," +
+          " we reccomend filtering the data you are interested in or reducing the limit"
+      )
+      .attr("id", "limitWarning")
+      .classed("d-none", true);
+    this.updateDisclaimerText();
+
+    // add a slider whose min is 0 and max is the number of data points
+
+    const sliderGroup = d3
+      .select("#advanced")
+      .append("g")
+      .attr("id", "sliderGroup");
+    sliderGroup.append("text").text("Data Shown:");
+    sliderGroup
+      .append("input")
+      .attr("type", "range")
+      .attr("min", 0)
+      .attr(
+        "max",
+        this.globalApplicationState.filteredData.length -
+          this.globalApplicationState.dataLimit
+      )
+      .attr("value", 0)
+      .attr("class", "slider")
+      .attr("id", "myRange")
+      .on("change", (d) => updateSlider(d));
+
+    // add text under slider
+    sliderGroup
+      .append("text")
+      .attr("id", "sliderText")
+      .text(" (Showing data points 0 to 5000)");
+
+    const updateSlider = (d) => {
+      this.globalApplicationState.startRange = d.srcElement.value;
       this.updateFilteredData();
     };
 
@@ -161,6 +237,24 @@ class filter {
 
     checkGroups.append("text").text((d) => d.name);
     checkGroups.filter((d, i) => i % 2).append("br");
+  }
+
+  updateDisclaimerText() {
+    let limit = this.globalApplicationState.dataLimit;
+    let results = this.globalApplicationState.filteredData.length;
+    if (limit > results) {
+      limit = results;
+    }
+    let text =
+      "Currently showing " + limit + " of " + results + " results on the map.";
+    d3.select("#limitDisclaimer").text(text);
+
+    if (limit > 8000) {
+      d3.select("#limitWarning").classed("d-none", false);
+    } else {
+      d3.select("#limitWarning").classed("d-none", true);
+    }
+    this.globalApplicationState.map?.updateCircles();
   }
 
   updateFilteredData() {
@@ -242,11 +336,27 @@ class filter {
         }
         return toReturn;
       });
-    this.updatVisualizations();
+
+    d3.select("#myRange")
+      .attr("value", 0)
+      .attr(
+        "max",
+        this.globalApplicationState.filteredData.length -
+          this.globalApplicationState.dataLimit
+      );
+    const sliderText =
+      " (Showing data points " +
+      this.globalApplicationState.startRange +
+      " to " +
+      (+this.globalApplicationState.startRange +
+        +this.globalApplicationState.dataLimit) +
+      ")";
+    d3.select("#sliderText").text(sliderText);
+    this.updateDisclaimerText();
+    this.updateBarGraphs();
   }
 
-  updatVisualizations() {
-    this.globalApplicationState.map.updateCircles();
+  updateBarGraphs() {
     this.globalApplicationState.hourlyDistribution.draw();
     this.globalApplicationState.monthlyDistribution.draw();
   }

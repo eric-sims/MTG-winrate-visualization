@@ -11,6 +11,7 @@ class googleMap {
         lat: 39.52,
         lng: -111.0937,
       },
+      streetViewControl: false,
     };
 
     this.map = new google.maps.Map(d3.select("#map").node(), options);
@@ -21,11 +22,17 @@ class googleMap {
   }
 
   async updateCircles() {
-    let data = this.globalApplicationState.filteredData.slice(0, 1000);
+    let start = +this.globalApplicationState.startRange ? +this.globalApplicationState.startRange : 0;
+    let limit = +this.globalApplicationState.dataLimit;
+    let data = this.globalApplicationState.filteredData.slice(
+      start,
+      start + limit
+    );
+    console.log("start", start, "limit", limit, "start + limit", start + limit);
     let dataCount = data.length; // We should display a string saying how many crashes we are showing
     let overlay = this.overlay;
 
-    //Create the overlay that we will draw on
+    
 
     // Add the container when the overlay is added to the map.
     overlay.onAdd = function () {
@@ -57,6 +64,9 @@ class googleMap {
 
         let markerEnter = marker.enter().append("svg");
 
+        // remove all previously drawn circles
+        markerEnter.selectAll("circle").remove();
+
         // add the circle
         markerEnter.append("circle");
 
@@ -76,8 +86,6 @@ class googleMap {
           .attr("fill", "red")
           .attr("id", (d) => "CRASH" + d.CRASH_ID)
           .on("click", (event, data) => {
-            // console.log("clicked", data);
-            // console.log('clicledd', event);
             d3.select("#details").html(
               `<h3>Accident Details</h3>
               <p>Accident ID: ${data.CRASH_ID}</p>
