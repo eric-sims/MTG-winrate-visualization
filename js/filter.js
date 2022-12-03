@@ -112,8 +112,6 @@ class filter {
       this.updateFilteredData();
     };
 
-
-
     const years = [2016, 2017, 2018, 2019];
 
     // Add radio buttons for years
@@ -168,28 +166,33 @@ class filter {
 
     // add a slider whose min is 0 and max is the number of data points
 
-    const sliderGroup = d3.select("#advanced").append("g").attr("id", "sliderGroup");
+    const sliderGroup = d3
+      .select("#advanced")
+      .append("g")
+      .attr("id", "sliderGroup");
     sliderGroup.append("text").text("Data Shown:");
     sliderGroup
       .append("input")
       .attr("type", "range")
       .attr("min", 0)
-      .attr("max", this.globalApplicationState.filteredData.length)
+      .attr(
+        "max",
+        this.globalApplicationState.filteredData.length -
+          this.globalApplicationState.dataLimit
+      )
       .attr("value", 0)
       .attr("class", "slider")
       .attr("id", "myRange")
       .on("change", (d) => updateSlider(d));
-    
+
     // add text under slider
-    sliderGroup.append("text").attr("id", "sliderText").text(" (Showing data points 0 to 5000)");
+    sliderGroup
+      .append("text")
+      .attr("id", "sliderText")
+      .text(" (Showing data points 0 to 5000)");
 
     const updateSlider = (d) => {
       this.globalApplicationState.startRange = d.srcElement.value;
-      const sliderText = " (Showing data points " + this.globalApplicationState.startRange + 
-                        " to " + (+this.globalApplicationState.startRange + +this.globalApplicationState.dataLimit) + ")";
-      console.log(sliderText);
-      d3.select("#sliderText").text(sliderText);
-
       this.updateFilteredData();
     };
 
@@ -235,10 +238,6 @@ class filter {
     checkGroups.append("text").text((d) => d.name);
     checkGroups.filter((d, i) => i % 2).append("br");
   }
-
-
-
-
 
   updateDisclaimerText() {
     let limit = this.globalApplicationState.dataLimit;
@@ -337,12 +336,25 @@ class filter {
         }
         return toReturn;
       });
+
+    d3.select("#myRange")
+      .attr("value", 0)
+      .attr(
+        "max",
+        this.globalApplicationState.filteredData.length -
+          this.globalApplicationState.dataLimit
+      );
+    const sliderText =
+      " (Showing data points " +
+      this.globalApplicationState.startRange +
+      " to " +
+      (+this.globalApplicationState.startRange +
+        +this.globalApplicationState.dataLimit) +
+      ")";
+    d3.select("#sliderText").text(sliderText);
     this.updateDisclaimerText();
     this.updateBarGraphs();
   }
-
-
-
 
   updateBarGraphs() {
     this.globalApplicationState.hourlyDistribution.draw();
