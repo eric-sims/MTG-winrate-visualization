@@ -47,6 +47,11 @@ Promise.all([
   globalApplicationState.links = data[1]["data"];
   this.filter = new filter(globalApplicationState);
 
+  globalApplicationState.links.map((link) => {
+    link.sourceName = globalApplicationState.booleanDataNames.find(d => d.type == link.source).name;
+    link.targetName = globalApplicationState.booleanDataNames.find(d => d.type == link.target).name;
+  });
+
   globalApplicationState.map = new googleMap(globalApplicationState);
   globalApplicationState.map.draw();
 

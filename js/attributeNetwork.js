@@ -100,8 +100,8 @@ class attributeNetwork {
               "<br>" +
               +d.count +
               " count. <br>" +
-              d.overlapp.toFixed(3) +
-              "% overlapp."
+              d.overlap.toFixed(3) +
+              "% overlap."
           )
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY + 10 + "px");
@@ -124,11 +124,8 @@ class attributeNetwork {
         item.source === this.selectedAttribute ||
         item.target === this.selectedAttribute
     );
-    this.valueMax = d3.count(
-      this.globalApplicationState.data,
-      (d) => d[this.selectedAttribute]
-    );
-
+    const temp = this.globalApplicationState.data.filter((d) => d[this.selectedAttribute])
+    this.valueMax = temp.length;
     this.localMax = d3.max(
       values
         .filter(
@@ -152,7 +149,7 @@ class attributeNetwork {
       }
       return {
         value: count / this.localMax,
-        overlapp: (count / this.valueMax) * 100,
+        overlap: (count / this.valueMax) * 100,
         name: item.name,
         type: item.type,
         count,
