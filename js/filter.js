@@ -154,14 +154,17 @@ class filter {
     };
     limitGroup.append("text").attr("id", "limitDisclaimer");
     limitGroup.append("br");
-    limitGroup
+    let warningGroup = limitGroup
+      .append("g")
+      .attr("id", "limitWarning")
+      .classed("d-none", true);
+    warningGroup
       .append("text")
       .text(
         "WARNING: displaying this many results can cause serious lag when zooming or navigating the map," +
           " we reccomend filtering the data you are interested in or reducing the limit"
-      )
-      .attr("id", "limitWarning")
-      .classed("d-none", true);
+      );
+    warningGroup.append("br").attr();
     this.updateDisclaimerText();
 
     // add a slider whose min is 0 and max is the number of data points
