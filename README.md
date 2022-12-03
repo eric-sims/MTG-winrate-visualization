@@ -30,7 +30,7 @@ You can hover over any of the other visualizations to get more information about
 
 # Project Website
 
-The project website is available [here]().
+The project website is available [here](https://eric-sims.github.io/MTG-winrate-visualization/). (https://eric-sims.github.io/MTG-winrate-visualization/)
 
 
 # Local Startup
