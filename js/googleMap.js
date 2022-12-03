@@ -4,75 +4,6 @@ class googleMap {
   }
 
   async draw() {
-    let styles = [
-      {
-        elementType: "labels",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "administrative",
-        elementType: "geometry",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "administrative.neighborhood",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "poi",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "road",
-        stylers: [
-          {
-            visibility: "on",
-          },
-        ],
-      },
-      {
-        featureType: "road",
-        elementType: "labels.icon",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-      {
-        featureType: "road.highway",
-        elementType: "labels.text",
-        stylers: [
-          {
-            visibility: "on",
-          },
-        ],
-      },
-      {
-        featureType: "transit",
-        stylers: [
-          {
-            visibility: "off",
-          },
-        ],
-      },
-    ];
     let options = {
       mapId: "roadMap",
       zoom: 7,
@@ -80,7 +11,7 @@ class googleMap {
         lat: 39.52,
         lng: -111.0937,
       },
-      // styles,
+      streetViewControl: false,
     };
 
     this.map = new google.maps.Map(d3.select("#map").node(), options);
