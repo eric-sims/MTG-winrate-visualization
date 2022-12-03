@@ -91,33 +91,17 @@ class googleMap {
   }
 
   async updateCircles() {
-    let start = 0; //TODO this is where we will allow the user to select a diferent part of the data
-    let limit = this.globalApplicationState.dataLimit;
+    let start = +this.globalApplicationState.startRange ? +this.globalApplicationState.startRange : 0;
+    let limit = +this.globalApplicationState.dataLimit;
     let data = this.globalApplicationState.filteredData.slice(
       start,
       start + limit
     );
-
-    // // add a google maps marker for every data point
-    // const markers = data.map((d) => {
-    //   return new google.maps.Marker({
-    //     position: {
-    //       lat: +d.lat,
-    //       lng: +d.lon,
-    //     },
-    //     label: {
-    //       text: d.CRASH_ID,
-    //     },
-    //   });
-    // });
-
-    // // Add a marker clusterer to manage the markers.
-    // new markerClusterer.MarkerClusterer({ markers, map: this.map });
-
+    console.log("start", start, "limit", limit, "start + limit", start + limit);
     let dataCount = data.length; // We should display a string saying how many crashes we are showing
     let overlay = this.overlay;
 
-    //Create the overlay that we will draw on
+    
 
     // Add the container when the overlay is added to the map.
     overlay.onAdd = function () {
@@ -149,6 +133,9 @@ class googleMap {
 
         let markerEnter = marker.enter().append("svg");
 
+        // remove all previously drawn circles
+        markerEnter.selectAll("circle").remove();
+
         // add the circle
         markerEnter.append("circle");
 
@@ -168,8 +155,6 @@ class googleMap {
           .attr("fill", "red")
           .attr("id", (d) => "CRASH" + d.CRASH_ID)
           .on("click", (event, data) => {
-            // console.log("clicked", data);
-            // console.log('clicledd', event);
             d3.select("#details").html(
               `<h3>Accident Details</h3>
               <p>Accident ID: ${data.CRASH_ID}</p>
