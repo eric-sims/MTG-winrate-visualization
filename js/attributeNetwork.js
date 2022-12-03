@@ -11,7 +11,6 @@ class attributeNetwork {
     this.selectedAttribute = this.categories[0].type;
 
     this.mapCategoryToData();
-    // console.log(this.categories);
 
     const selectorGroup = d3.select("#attributeNetwork").append("g");
     selectorGroup.append("text").text("Attribute:");
@@ -69,44 +68,54 @@ class attributeNetwork {
       .attr("y", 100)
       .attr("height", 40)
       .attr("width", 40);
-    
+
     this.arrangeCars();
 
     this.tooltip = d3
-            .select("#attributeNetwork")
-            .append("div")
-            .style("opacity", 0)
-            .attr("class", "tooltip")
-            .style("background-color", "white")
-            .style("border", "solid")
-            .style("border-width", "2px")
-            .style("border-radius", "5px")
-            .style("padding", "5px");
+      .select("#attributeNetwork")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px");
     const that = this;
     // Three function that change the tooltip when user hover / move / leave a cell
     this.mouseover = function (event, d) {
-      // console.log('mouseover')
       that.tooltip.style("opacity", 1);
     };
-    
+
     this.mousemove = function (event, d) {
-      console.log("d", d);
+      if (d.type === that.selectedAttribute) {
         that.tooltip
-          .html(d.name + "<br>" +  d.value.toFixed(3) + "% similarity")
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY + 10 + "px");
+          .html(d.name + "<br>" + d.count + " total count.")
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px");
+      } else {
+        that.tooltip
+          .html(
+            d.name +
+              "<br>" +
+              +d.count +
+              " count. <br>" +
+              d.overlapp.toFixed(3) +
+              "% overlapp."
+          )
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px");
+      }
     };
-  
+
     this.mouseleave = function (d) {
-      // console.log("mouseleave");
-        that.tooltip.style("opacity", 0);
+      that.tooltip.style("opacity", 0);
     };
 
     d3.selectAll("image")
       .on("mouseover", this.mouseover)
       .on("mousemove", this.mousemove)
       .on("mouseleave", this.mouseleave);
-
   }
 
   mapCategoryToData() {
@@ -129,18 +138,24 @@ class attributeNetwork {
         )
         .map((d) => d.value)
     );
-    console.log((this.localMax / this.valueMax) * 100);
     this.categories = this.categories.map((item) => {
+      let count = values.filter(
+        (value) => value.source === item.type || value.target === item.type
+      )[0].value;
       if (item.type === this.selectedAttribute) {
-        return { value: 1, name: item.name, type: item.type };
+        return {
+          value: 1,
+          name: item.name,
+          type: item.type,
+          count: this.valueMax,
+        };
       }
       return {
-        value:
-          values.filter(
-            (value) => value.source === item.type || value.target === item.type
-          )[0].value / this.localMax,
+        value: count / this.localMax,
+        overlapp: (count / this.valueMax) * 100,
         name: item.name,
         type: item.type,
+        count,
       };
     });
   }
@@ -152,12 +167,8 @@ class attributeNetwork {
         item.source === this.selectedAttribute ||
         item.target === this.selectedAttribute
     );
-    console.log(this.categories);
 
-    this.xScale = d3
-      .scaleLinear()
-      .domain([(this.localMax / this.valueMax) * 100, 0])
-      .range([20, 780]);
+    this.xScale = d3.scaleLinear().domain([this.localMax, 0]).range([20, 780]);
 
     this.simulation.stop();
     this.simulation = d3
@@ -261,6 +272,6 @@ class attributeNetwork {
       .attr("y", 350 - 5)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
-      .text("Percentage Correlation to Selected Attribute");
+      .text("Overlap Count with Selected Attribute");
   }
 }
