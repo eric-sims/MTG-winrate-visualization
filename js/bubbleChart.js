@@ -167,6 +167,7 @@ class bubbleChart {
                 if (that.toggle) {
                     // append div over svg
                     that.svg.append("foreignObject")
+                        .attr('id', 'bubbleChartInsights')
                         .attr("x", 0)
                         .attr("y", 0)
                         .attr("width", width + 200)
@@ -174,6 +175,7 @@ class bubbleChart {
 
                     // create textbox above pedestrian invovled circle
                     that.svg.append("foreignObject")
+                        .attr('id', 'bubbleChartInsights')
                         .attr("x", that.xScale(categoryMap.get("PEDESTRIAN_INVOLVED").averageScore) - 200)
                         .attr("y", 10)
                         .attr("width", width)
@@ -199,6 +201,14 @@ class bubbleChart {
                     d3.select("#floatingTextBC").remove();
                     d3.select("#pedestrian").remove();
                     d3.select("#pedestrianLine").remove();
+                    d3.selectAll("#bubbleChartInsights").remove();
+
+                    // redraw tooltip
+                    that.circles
+                        .on("mouseover", that.mouseover)
+                        .on("mousemove", that.mousemove)
+                        .on("mouseleave", that.mouseleave);
+
                 }
 
                 
