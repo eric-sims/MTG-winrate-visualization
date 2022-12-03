@@ -130,7 +130,7 @@ body{
   background-color: #f1f1f1;
 }
 
-.tab button {
+.tab button, .tab a{
   background-color: inherit;
   float: left;
   border: none;
@@ -141,10 +141,20 @@ body{
   font-size: 17px;
 }
 
-.tab button:hover {
+.tab button:hover, .tab a:hover {
   background-color: #ddd;
 }
 
 .tab button.active {
   background-color: #ccc;
 }
+
+.tab a{
+  -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    color: initial;
+
+} 
