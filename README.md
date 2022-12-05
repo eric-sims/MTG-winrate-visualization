@@ -9,6 +9,7 @@ The project has data and the javascript code in two separate folders. The data f
 # Non-obvious features
 
 ## Data on Google Map overlay
+
 There are about 250,000 data points that are on this vizualizaiton. The map could only handle drawing about 8,000 of those points at a time. Our first suggestion is to filter the car accidents by data and attributes to get that number lower. We set a limiter in the filter section as well. You can move a slider to show the different data in total.
 
 ## Click on accident point for more info
@@ -21,17 +22,21 @@ You can click on a bar in the bar chart to highlight the data on the map. This w
 
 ## Tooltip hover on all other visualizations
 
-You can hover over any of the other visualizations to get more information about the data. 
+You can hover over any of the other visualizations to get more information about the data.
 
 # Project Video
 
 <!-- Embed this video https://www.youtube.com/watch?v=_IkwectHK40&ab_channel=AlanBird -->
+
 [![Project Video](https://img.youtube.com/vi/_IkwectHK40/0.jpg)](https://www.youtube.com/watch?v=_IkwectHK40&ab_channel=AlanBird)
 
 # Project Website
 
 The project website is available [here](https://eric-sims.github.io/MTG-winrate-visualization/). (https://eric-sims.github.io/MTG-winrate-visualization/)
 
+# Project Workbook
+
+The project workbook is available [here](https://eric-sims.github.io/MTG-winrate-visualization/ProccessBook.pdf). (https://eric-sims.github.io/MTG-winrate-visualization/ProccessBook.pdf)
 
 # Local Startup
 
